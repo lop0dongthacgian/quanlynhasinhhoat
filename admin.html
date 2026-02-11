@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ban Điều hành Nhà Sinh Hoạt</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --success: #06d6a0;
+      --danger: #ef476f;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --gray: #6c757d;
+      --border: #e0e0e0;
+      --radius: 12px;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333; line-height: 1.6; min-height: 100vh; padding: 20px;
+    }
+
+    .container { max-width: 1400px; margin: 0 auto; }
+
+    .admin-header {
+      text-align: center; margin-bottom: 30px; padding: 25px 20px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white; border-radius: var(--radius); shadow: var(--shadow);
+      position: relative; overflow: hidden;
+    }
+
+    .admin-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; position: relative; text-shadow: 0.5px 0.5px 1.5px rgba(0, 0, 255, 0.9), 1px 1px 2px rgba(0, 0, 0, 0.9), 0.5px 0.5px 1px rgba(255, 255, 255, 0.6);}
+    .admin-header h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; position: relative; }
+    
+    .card {
+      background: white; padding: 25px; border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 25px; transition: 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .card-title {
+      text-align: center; font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;
+      color: var(--primary); display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding-bottom: 12px; border-bottom: 2px solid #f0f0f0; cursor: pointer;
+    }
+
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; margin-bottom: 20px; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--gray); }
+
+    input, select { padding: 12px 15px; border: 1px solid var(--border); border-radius: 8px; width: 100%; }
+
+    .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+
+    .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; }
+    table { width: 100%; border-collapse: collapse; min-width: 800px; }
+    th, td { padding: 14px 16px; text-align: center; border-bottom: 1px solid #eee; }
+    th { background: #f8f9fa; font-weight: 700; }
+
+    .status-pending { color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 4px 10px; border-radius: 20px; }
+    .status-approved { color: var(--success); background: rgba(6, 214, 160, 0.1); padding: 4px 10px; border-radius: 20px; }
+
+    .collapse-content { display: none; margin-top: 15px; }
+    .collapsible.active .collapse-content { display: block; }
+    
+    .sub-title { font-size: 1rem; margin: 20px 0 10px; color: var(--secondary); border-left: 2px solid var(--secondary); border-right: 2px solid var(--secondary); padding-left: 10px; text-align: left; }
+
+    .btn-close-section { margin: 20px auto; display: block; padding: 8px 18px; background: transparent; border: 2px solid #dc2626; color: #dc2626; border-radius: 6px; cursor: pointer; }
+    
+    .loading { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="admin-header" style="border: 2px solid var(--primary); border-radius: var(--radius); background: rgba(255, 255, 255, 0.7); padding: 30px;">
+  <h1 style="color: white; margin: 0;">QUẢN LÝ LỊCH </h1>
+  <h2 style="color: var(--primary); margin: 0;"> SỬ DỤNG NHÀ <br> SINH HOẠT CỘNG ĐỒNG</h2>
+</header>
+
+    <div class="card">
+      <div class="card-title"><i class="fas fa-tasks"></i> DUYỆT ĐĂNG KÝ MỚI</div>
+      <div class="table-container">
+        <table id="tableDangKy">
+          <thead>
+            <tr>
+              <th>Ngày đăng ký</th>
+              <th>Ngày sử dụng</th>
+              <th>Buổi</th>
+              <th>Đơn vị</th>
+              <th>Nội dung</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card collapsible">
+  <div class="card-title" onclick="toggleSection(this)"><i class="fas fa-calendar-check"></i> QUẢN LÝ LỊCH SỬ DỤNG (TẤT CẢ)</div>
+  <div class="collapse-content">
+    
+    <div class="sub-title">1. Lịch đã duyệt từ đăng ký</div>
+    <div class="table-container">
+      <table id="tableLichSu">
+        <thead><tr><th>Ngày</th><th>Buổi</th><th>Đơn vị</th><th>Nội dung</th><th>Xóa</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">2. Lịch cố định hàng tuần</div>
+    <div class="table-container">
+      <table id="tableThuongXuyen">
+        <thead><tr><th>Thứ</th><th>Buổi</th><th>Nội dung</th><th>Xóa</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="sub-title">3. Lịch cố định hàng tháng</div>
+    <div class="table-container">
+      <table id="tableHangThang">
+        <thead><tr><th>Ngày</th><th>Thứ</th><th>Buổi</th><th>Nội dung</th><th>Xóa</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    
+    <!-- ✅ ĐÃ SỬA: Thêm mục 4 đúng cách, KHÔNG đặt trong script -->
+    <div class="sub-title">4. Lịch sử quá khứ (30-60 ngày)</div>
+    <div class="table-container">
+      <table id="tableLichSuQuaKhu">
+        <thead>
+          <tr>
+            <th>Ngày sử dụng</th>
+            <th>Buổi</th>
+            <th>Đơn vị</th>
+            <th>Nội dung</th>
+            <th>Thời gian đăng ký</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    
+    <button class="btn-close-section" onclick="closeSection(this)">Đóng bảng quản lý lịch sử dụng</button>
+  </div>
+</div>
+
+    <div class="card collapsible">
+      <div class="card-title" onclick="toggleSection(this)"><i class="fas fa-redo"></i> THIẾT LẬP LỊCH CỐ ĐỊNH</div>
+      <div class="collapse-content">
+        <div class="sub-title">Thêm lịch hàng tuần</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Thứ</label>
+            <select id="thuTX">
+              <option value="Thứ 2">Thứ 2</option><option value="Thứ 3">Thứ 3</option>
+              <option value="Thứ 4">Thứ 4</option><option value="Thứ 5">Thứ 5</option>
+              <option value="Thứ 6">Thứ 6</option><option value="Thứ 7">Thứ 7</option>
+              <option value="Chủ Nhật">Chủ Nhật</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Buổi</label>
+            <select id="buoiTX">
+              <option value="Sáng">Sáng</option><option value="Chiều">Chiều</option><option value="Tối">Tối</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nội dung</label>
+            <input type="text" id="noiDungTX" placeholder="VD: Sinh hoạt CLB">
+          </div>
+          <button class="btn btn-primary" onclick="themThuongXuyen()" style="justify-content: center; text-align: center; width: 100%;">Thêm vào lịch</button>
+        </div>
+
+        <div class="sub-title">Thêm lịch hàng tháng (Cố định ngày)</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ngày trong tháng</label>
+            <input type="number" id="ngayHT" min="1" max="31" placeholder="1 - 31">
+          </div>
+          <div class="form-group">
+            <label>Buổi</label>
+            <select id="buoiHT">
+              <option value="Sáng">Sáng</option><option value="Chiều">Chiều</option><option value="Tối">Tối</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nội dung</label>
+            <input type="text" id="noiDungHT" placeholder="VD: Họp tổ dân phố">
+          </div>
+          <button class="btn btn-primary" onclick="themHangThang()" style="justify-content: center; text-align: center; width: 100%;">Thêm vào lịch</button>
+          <button class="btn-close-section" onclick="closeSection(this)">Đóng bảng thiết lập lịch cố định</button> 
+        </div>
+      </div>
+    </div>
+
+    <footer class="admin-footer" style="text-align: center; color: var(--gray); margin-top: 20px;">
+      <p>Nhà sinh hoạt cộng đồng Trung Bình A <br> Phường Thanh Khê - Thành phố Đà Nẵng</p>
+    </footer>
+  </div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygqnzIuAi7IqOwBGUFqrugrjGjFjvShIP-ZOxqQhUH4C2yryc0OIFA10d5Pd2177v1/exec';
+    let globalData = {};
+
+    async function loadData() {
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getData`);
+        globalData = await res.json();
+        renderDangKy(globalData.dangKy || []);
+        renderLichSu(globalData.lichSu || []);
+        renderThuongXuyen(globalData.thuongXuyen || []);
+        renderHangThang(globalData.hangThang || []);
+      } catch (e) { console.error("Lỗi:", e); }
+    }
+
+    // --- LOGIC KIỂM TRA TRÙNG LỊCH ---
+    function checkTrungLich(ngayStr, buoi) {
+      // 1. Chuyển ngày đăng ký sang Thứ
+      const parts = ngayStr.split('/');
+      const dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+      const thuVN = ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"][dateObj.getDay()];
+      const ngayTrongThang = dateObj.getDate().toString();
+
+      // 2. Kiểm tra trùng lịch Thường Xuyên (Hàng tuần)
+      const trungTuan = globalData.thuongXuyen.find(l => l['Thứ'] === thuVN && l['Buổi'] === buoi);
+      if (trungTuan) return `Trùng lịch cố định: ${trungTuan['Nội dung']} (${thuVN})`;
+
+      // 3. Kiểm tra trùng lịch Hàng Tháng
+      const trungThang = globalData.hangThang.find(l => l['Ngày'].toString() === ngayTrongThang && l['Buổi'] === buoi);
+      if (trungThang) return `Trùng lịch tháng: ${trungThang['Nội dung']} (Ngày ${ngayTrongThang})`;
+
+      // 4. Kiểm tra trùng lịch đã duyệt
+      const trungDaDuyet = globalData.lichSu.find(l => l['Ngày'] === ngayStr && l['Buổi'] === buoi);
+      if (trungDaDuyet) return `Ngày này đã có đơn vị "${trungDaDuyet['Đơn vị']}" sử dụng.`;
+
+      return null;
+    }
+
+    // --- RENDER & SẮP XẾP ---
+    function renderDangKy(arr) {
+      const tbody = document.querySelector('#tableDangKy tbody');
+      tbody.innerHTML = arr.map(item => `
+        <tr>
+          <td><small>${item['Thời gian đăng ký']}</small></td>
+          <td><strong>${item['Ngày']}</strong></td>
+          <td><span class="status-pending">${item['Buổi']}</span></td>
+          <td>${item['Đơn vị']}</td>
+          <td>${item['Nội dung']}</td>
+          <td>
+            <button class="btn btn-success btn-sm" onclick="duyetDangKy('${item.ID}', '${item['Ngày']}', '${item['Buổi']}')">Duyệt</button>
+            <button class="btn btn-danger btn-sm" onclick="xoaLich('dang_ky', '${item.ID}')">Xóa</button>
+          </td>
+        </tr>`).join('') || '<tr><td colspan="6">Không có yêu cầu mới</td></tr>';
+    }
+
+    function renderLichSu(arr) {
+     const tbody = document.querySelector('#tableLichSu tbody');
+     arr.sort((a, b) => new Date(a['Ngày'].split('/').reverse().join('-')) - new Date(b['Ngày'].split('/').reverse().join('-')));
+     tbody.innerHTML = arr.map(item => `
+         <tr>
+         <td>${item['Ngày']}</td>
+        <td><span class="status-approved">${item['Buổi']}</span></td>
+        <td>${item['Đơn vị']}</td>
+        <td>${item['Nội dung']}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="xoaLich('lich_su', '${item.ID}')"><i class="fas fa-trash"></i></button></td>
+       </tr>`).join('') || '<tr><td colspan="5">Trống</td></tr>';
+       }
+
+    function renderThuongXuyen(arr) {
+      const order = { "Thứ 2": 1, "Thứ 3": 2, "Thứ 4": 3, "Thứ 5": 4, "Thứ 6": 5, "Thứ 7": 6, "Chủ Nhật": 7 };
+      arr.sort((a, b) => order[a['Thứ']] - order[b['Thứ']]);
+      document.querySelector('#tableThuongXuyen tbody').innerHTML = arr.map(item => `
+        <tr>
+          <td><strong>${item['Thứ']}</strong></td>
+          <td>${item['Buổi']}</td>
+          <td>${item['Nội dung']}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="xoaLich('thuong_xuyen', '${item.ID}')">Xóa</button></td>
+        </tr>`).join('') || '<tr><td colspan="4">Trống</td></tr>';
+    }
+
+    function renderHangThang(arr) {
+      arr.sort((a, b) => parseInt(a['Ngày']) - parseInt(b['Ngày']));
+      document.querySelector('#tableHangThang tbody').innerHTML = arr.map(item => `
+        <tr>
+          <td>Ngày ${item['Ngày']}</td>
+          <td>${item['Thứ'] || 'Cố định'}</td>
+          <td>${item['Buổi']}</td>
+          <td>${item['Nội dung']}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="xoaLich('hang_thang', '${item.ID}')">Xóa</button></td>
+        </tr>`).join('') || '<tr><td colspan="5">Trống</td></tr>';
+    }
+
+    // --- HÀNH ĐỘNG ---
+    async function duyetDangKy(id, ngay, buoi) {
+      const error = checkTrungLich(ngay, buoi);
+      if (error) {
+        alert("⚠️ KHÔNG THỂ DUYỆT:\n" + error);
+        return;
+      }
+      if (!confirm('Duyệt yêu cầu này?')) return;
+      
+      const res = await fetch(`${SCRIPT_URL}?action=duyetDangKy&id=${id}`);
+      const result = await res.json();
+      if (result.success) { alert('Thành công!'); loadData(); }
+    }
+
+    async function xoaLich(sheet, id) {
+      if (!confirm('Xóa mục này?')) return;
+      const res = await fetch(`${SCRIPT_URL}?action=xoaLich&sheet=${sheet}&id=${id}`);
+      const result = await res.json();
+      if (result.success) loadData();
+    }
+
+    async function themThuongXuyen() {
+      const thu = document.getElementById('thuTX').value;
+      const buoi = document.getElementById('buoiTX').value;
+      const nd = document.getElementById('noiDungTX').value;
+      if (!nd) return alert("Nhập nội dung");
+      const res = await fetch(`${SCRIPT_URL}?action=themThuongXuyen&thu=${encodeURIComponent(thu)}&buoi=${encodeURIComponent(buoi)}&nd=${encodeURIComponent(nd)}`);
+      const result = await res.json();
+      if (result.success) { loadData(); document.getElementById('noiDungTX').value = ''; }
+    }
+
+    async function themHangThang() {
+      const ngay = document.getElementById('ngayHT').value;
+      const buoi = document.getElementById('buoiHT').value;
+      const nd = document.getElementById('noiDungHT').value;
+      if (!ngay || !nd) return alert("Nhập đủ ngày và nội dung");
+      const res = await fetch(`${SCRIPT_URL}?action=themHangThang&ngay=${ngay}&buoi=${encodeURIComponent(buoi)}&nd=${encodeURIComponent(nd)}`);
+      const result = await res.json();
+      if (result.success) { loadData(); document.getElementById('ngayHT').value = ''; document.getElementById('noiDungHT').value = ''; }
+    }
+    
+    // Thêm hàm này vào trong thẻ <script> của admin.html
+function renderLichSuQuaKhu(arr) {
+  const tbody = document.querySelector('#tableLichSuQuaKhu tbody');
+  if (!tbody) return;
+  
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  
+  // Lọc lịch đã qua
+  const oldSchedules = arr.filter(item => {
+    if (!item['Ngày']) return false;
+    const parts = item['Ngày'].split('/');
+    if (parts.length !== 3) return false;
+    const ngayItem = new Date(parts[2], parts[1]-1, parts[0]);
+    return ngayItem < today;
+  });
+  
+  // Sắp xếp từ mới nhất đến cũ nhất
+  oldSchedules.sort((a, b) => {
+    const aParts = a['Ngày'].split('/');
+    const bParts = b['Ngày'].split('/');
+    const aDate = new Date(aParts[2], aParts[1]-1, aParts[0]);
+    const bDate = new Date(bParts[2], bParts[1]-1, bParts[0]);
+    return bDate - aDate;
+  });
+  
+  // Chỉ lấy 60 ngày gần nhất
+  const last60Days = oldSchedules.slice(0, 60);
+  
+  tbody.innerHTML = last60Days.map(item => `
+    <tr>
+      <td><strong>${item['Ngày']}</strong></td>
+      <td>${item['Buổi']}</td>
+      <td>${item['Đơn vị']}</td>
+      <td>${item['Nội dung']}</td>
+      <td><small>${item['Thời gian đăng ký'] || ''}</small></td>
+    </tr>
+  `).join('') || '<tr><td colspan="5">Không có lịch sử quá khứ</td></tr>';
+}
+
+// Cập nhật hàm loadData
+async function loadData() {
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getData`);
+    globalData = await res.json();
+    renderDangKy(globalData.dangKy || []);
+    renderLichSu(globalData.lichSu || []);
+    renderLichSuQuaKhu(globalData.lichSu || []); // ✅ THÊM DÒNG NÀY
+    renderThuongXuyen(globalData.thuongXuyen || []);
+    renderHangThang(globalData.hangThang || []);
+  } catch (e) { console.error("Lỗi:", e); }
+}
+    
+
+    function toggleSection(header) { header.parentElement.classList.toggle("active"); }
+    function closeSection(button) { button.closest(".collapsible").classList.remove("active"); }
+
+    window.onload = loadData;
+    setInterval(loadData, 30000);
+  </script>
+</body>
+</html>
