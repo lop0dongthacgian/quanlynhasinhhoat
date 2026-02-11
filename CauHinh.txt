@@ -1,0 +1,23 @@
+📋 HƯỚNG DẪN CÀI ĐẶT TRIGGER
+
+Bạn cần làm bước này để hàm tự động chạy:
+
+1. Mở Google Apps Script (script.google.com)
+2. Mở project của bạn
+3. Click vào "Triggers" (đồng hồ) ở thanh bên trái
+4. Click "+ Add Trigger" ở góc dưới phải
+5. Cấu hình:
+   · Function: autoCleanOldSchedules
+   · Event source: Time-driven
+   · Type: Day timer
+   · Time: 1am to 2am
+6. Click Save
+7. Cấp quyền khi được yêu cầu
+
+🎯 TÓM TẮT
+
+File Trạng thái Hành động
+Code.gs ✅ Đúng Không cần sửa, chỉ cần cài trigger
+admin.html ❌ Sai Cần sửa ngay - đặt HTML sai chỗ
+
+Sau khi sửa admin.html, hệ thống của bạn sẽ hoạt động hoàn hảo! 🚀
