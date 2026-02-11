@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lịch Sử Dụng nhà sinh hoạt</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --bg: #f8f9fa;
+      --light: #ffffff;
+      --text: #333333;
+      --text-light: #666666;
+      --border: #e0e0e0;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      --radius: 12px;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 15px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Header chính */
+    .main-header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding: 20px 15px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .main-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      position: relative;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--light);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .card h3 {
+      color: var(--primary);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+      gap: 10px;
+    }
+
+    .card h3 i {
+      color: var(--secondary);
+    }
+
+    /* Form đăng ký */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--text-light);
+    }
+
+    input, select, button {
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+
+    button {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      margin-top: 24px;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      opacity: 0.95;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    /* Bảng lịch */
+    .calendar-container {
+      overflow: hidden;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      background: var(--light);
+      margin-bottom: 15px;
+    }
+
+    .calendar-header {
+      position: relative;          /* thêm */
+     display: flex;
+     justify-content: center;     /* đổi */
+      padding: 15px 18px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+    
+     .calendar-header h3 {
+  margin: 0;
+}
+
+.day-count {
+  position: absolute;   /* đưa sang phải */
+  right: 18px;
+}
+
+    .day-count {
+      background: var(--primary);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .day-count.extended {
+      background: var(--danger);
+    }
+
+    /* Chú thích màu */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-light);
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* Container cuộn ngang cho bảng */
+    .table-responsive {
+      overflow-x: auto;
+      max-height: 65vh;
+      position: relative;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1100px;
+      background: white;
+    }
+
+    th, td {
+      border-right: 1px solid #eceeef;
+      padding: 10px 8px;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    th:last-child, td:last-child {
+      border-right: none;
+    }
+
+    /* Header ngày tháng */
+    th {
+      background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      min-width: 140px;
+      font-weight: 600;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    th.sunday {
+    background: linear-gradient(to bottom, #dc2626, #b91c1c);
+    color: white;
+    }
+
+    .date-label {
+      font-size: 0.95rem;
+      display: block;
+      font-weight: 600;
+    }
+
+    .day-label {
+      font-size: 0.8rem;
+      font-weight: normal;
+      opacity: 0.9;
+      margin-top: 3px;
+      display: block;
+    }
+
+    /* Cột Buổi - ĐÃ THU NHỎ */
+    .sticky-col {
+      position: sticky;
+      left: 0;
+      background: linear-gradient(to right, #f1f3f5, #e9ecef) !important;
+      font-weight: 700;
+      width: 70px; /* Đã thu nhỏ từ 100px xuống 70px */
+      min-width: 70px;
+      max-width: 70px;
+      z-index: 11;
+      color: var(--primary);
+      border-right: 2px solid #ddd;      
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      padding: 10px 5px !important;
+      font-size: 0.95rem;
+    }
+
+    /* Ô dữ liệu */
+    .cell-content {
+      min-height: 115px;
+      padding: 8px;
+      background: #fcfcfc;
+      transition: background 0.2s ease;
+    }
+
+    .cell-content:hover {
+      background: #f8f9fa;
+    }
+
+    .event {
+      font-size: 0.82rem;
+      padding: 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      text-align: left;
+      line-height: 1.4;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease;
+    }
+
+    .event:hover {
+      transform: translateX(2px);
+    }
+
+    .event-fixed {
+      background: #e0e7ff;
+      color: #3730a3;
+      border-left: 1px solid #4361ee;
+      border-right: 1px solid #4361ee;
+    }
+
+    .event-monthly {
+      background: #fef3c7;
+      color: #92400e;
+      border-left: 1px solid #f59e0b;
+      border-right: 1px solid #f59e0b;
+    }
+
+    .event-approved {
+      background: #dcfce7;
+      color: #166534;
+      border-left: 1px solid #22c55e;
+      border-right: 1px solid #22c55e;
+    }
+
+    .event-pending {
+      background: #fee2e2;
+      color: #991b1b;
+      border-left: 1px dashed #ef4444;
+      border-right: 1px dashed #ef4444;
+    }
+
+    .empty {
+      color: #adb5bd;
+      font-size: 0.82rem;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      min-height: 70px;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .empty i {
+      font-size: 1.2rem;
+      opacity: 0.5;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 25px;
+      color: var(--text-light);
+      font-size: 1rem;
+      border-top: 1px solid var(--border);
+      background: var(--light);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .footer strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Today highlight */
+    .today {
+      background-color: rgba(67, 97, 238, 0.07) !important;
+      position: relative;
+    }
+
+    .today::after {
+      content: "Hôm nay";
+      position: absolute;
+      top: 1px;
+      right: 3px;
+      font-size: 0.65rem;
+      border: 1.5px solid #F800FA;   /* Thêm dòng này */
+     border-radius: 8px;
+     font-weight: 600;
+     cursor: pointer;
+     transition: all 0.3s ease;
+      color: #F800FA;
+      padding: 2px 5px;
+      border-radius: 8px;
+    }
+
+    /* Thông báo mở rộng */
+    .expansion-notice {
+      background: #fef3c7;
+      border-left: 2px solid #f59e0b;
+      border-right: 2px solid #f59e0b;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .main-header h1 {
+        font-size: 2rem;
+      }
+      
+      .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      }
+      
+      .card h3 {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .main-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .form-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+      }
+      
+      .legend {
+        font-size: 0.85rem;
+        gap: 10px;
+      }
+      
+      .calendar-header {
+        padding: 12px 15px;
+      }
+      
+      .footer {
+        font-size: 0.95rem;
+        padding: 18px;
+      }
+      
+      /* Tiêu đề ngày nhỏ hơn trên tablet */
+      .date-label {
+        font-size: 0.9rem;
+      }
+      
+      .day-label {
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 12px;
+      }
+      
+      .main-header {
+        padding: 18px 12px;
+        margin-bottom: 20px;
+      }
+      
+      .main-header h1 {
+        font-size: 1.6rem; /* Nhỏ hơn cho mobile */
+        margin-bottom: 6px;
+      }
+      
+      .main-header p {
+        font-size: 1rem; /* Nhỏ hơn cho mobile */
+      }
+      
+      .card {
+        padding: 18px;
+        margin-bottom: 18px;
+      }
+      
+      .card h3 {
+        font-size: 1.2rem; /* Nhỏ hơn cho mobile */
+        margin-bottom: 15px;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      button {
+        margin-top: 0;
+      }
+      
+      .legend {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 0.82rem;
+      }
+      
+      .calendar-header {
+     flex-direction: column;
+     align-items: center;   /* sửa lại */
+     gap: 10px;
+     }
+
+.day-count {
+  position: static;      /* bỏ absolute trên mobile */
+}
+      
+      .day-count {
+        align-self: flex-end;
+      }
+      
+      .footer {
+        font-size: 0.9rem; /* Nhỏ hơn cho mobile */
+        padding: 15px;
+      }
+      
+      .table-responsive {
+        max-height: 55vh;
+      }
+      
+      /* Tiêu đề ngày nhỏ hơn trên mobile */
+      .date-label {
+        font-size: 0.85rem;
+      }
+      
+      .day-label {
+        font-size: 0.7rem;
+      }
+      
+      /* Cột Buổi nhỏ hơn trên mobile */
+      .sticky-col {
+        width: 65px;
+        min-width: 65px;
+        max-width: 65px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-header h1 {
+        font-size: 1.2rem; /* Nhỏ hơn cho điện thoại rất nhỏ */
+      }
+      
+      .main-header p {
+        font-size: 0.7rem; /* Nhỏ hơn cho điện thoại rất nhỏ */
+      }
+      
+      .card h3 {
+        font-size: 1.1rem; /* Nhỏ hơn cho điện thoại rất nhỏ */
+      }
+      
+      .legend {
+        font-size: 0.78rem;
+      }
+      
+      .footer {
+        font-size: 1rem; /* Nhỏ hơn cho điện thoại rất nhỏ */
+        padding: 12px;
+      }
+      
+      .day-count {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+      }
+      
+      /* Tiêu đề ngày nhỏ hơn trên điện thoại rất nhỏ */
+      .date-label {
+        font-size: 0.8rem;
+      }
+      
+      .day-label {
+        font-size: 0.65rem;
+      }
+      
+      /* Cột Buổi nhỏ hơn trên điện thoại rất nhỏ */
+      .sticky-col {
+        width: 60px;
+        min-width: 60px;
+        max-width: 60px;
+        font-size: 0.85rem;
+        padding: 8px 4px !important;
+      }
+      
+      .cell-content {
+        min-height: 100px;
+        padding: 6px;
+      }
+      
+      .event {
+        font-size: 0.78rem;
+        padding: 6px;
+      }
+    }
+
+    /* Hiệu ứng loading */
+    .loading {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    /* ===== POPUP CAM KẾT ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: white;
+  padding: 30px 25px;
+  border-radius: 16px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  animation: popupFade 0.3s ease;
+}
+
+.modal-box h3 {
+  color: var(--success);
+  margin-bottom: 10px;
+}
+
+.modal-box p {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.modal-icon {
+  font-size: 48px;
+  color: var(--success);
+  margin-bottom: 10px;
+}
+
+.modal-box button {
+  display: block;
+  margin: 0 auto;              /* CANH GIỮA */
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+@keyframes popupFade {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+  /* ===== NÚT NỘI QUY ===== */
+.noi-quy-link {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.noi-quy-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: white;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+
+.noi-quy-link a:hover {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ===== FOOTER ===== */
+.noi-quy-footer{
+  text-align:center;
+  margin-top:35px;
+}
+
+/* ============================= */
+/*        FOOTER BAN QUẢN LÝ    */
+/* ============================= */
+
+.noi-quy-footer{
+  text-align: center;
+  margin-top: 35px;
+}
+
+.bql-link{
+  display: inline-block;
+  padding: 8px 22px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--primary);
+  cursor: pointer;
+  border: 2px solid var(--primary);   /* Luôn có viền */
+  border-radius: 8px;                 /* ÍT CONG hơn (trước là 30px) */
+  background: transparent;            /* Không nền mặc định */
+  transition: all 0.3s ease;
+}
+
+.bql-link:hover{
+  background: var(--primary);         /* Hover nền xanh */
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* ============================= */
+/*            MODAL              */
+/* ============================= */
+
+.bql-modal{
+  display: none;              /* Mặc định đóng */
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.bql-content{
+  background: #ffffff;
+  width: 90%;
+  max-width: 480px;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  animation: fadeIn 0.25s ease;
+}
+
+.bql-content h3{
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 18px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.bql-content ul{
+  padding-left: 18px;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.bql-content li{
+  margin-bottom: 8px;
+}
+
+/* ============================= */
+/*           NÚT ĐÓNG            */
+/* ============================= */
+
+.btn-close{
+  display: block;
+  margin: 22px auto 0;   /* Canh giữa */
+  padding: 8px 30px;
+  font-weight: 600;
+  background: transparent;   /* Không nền */
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-close:hover{
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ============================= */
+/*         HIỆU ỨNG MỞ           */
+/* ============================= */
+
+@keyframes fadeIn{
+  from {opacity:0; transform:translateY(-8px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+/* ================= LỊCH THU GỌN ================= */
+
+.lich-wrapper {
+  margin: 20px 0;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.lich-header {
+  background: none;
+  color: blue;
+  padding: 15px 20px;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.lich-header:hover {
+  opacity: 0.95;
+}
+
+.lich-header i {
+  transition: transform 0.3s ease;
+}
+
+.lich-header.expanded i {
+  transform: rotate(180deg);
+}
+
+.lich-content {
+  display: none;
+  padding: 0;
+  background: white;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.lich-content.expanded {
+  display: block;
+}
+
+/* Nút đóng trong lịch */
+.close-calendar-btn {
+  display: block;
+  margin: 15px auto;
+  padding: 10px 30px;
+  background: transparent;
+  color: #0d6efd;
+  border: 1.5px solid #0d6efd;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-calendar-btn:hover {
+  background: #0d6efd;
+  color: white;
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+}
+
+/* Đảm bảo bảng lịch rộng hết cỡ */
+.lich-content .table-responsive {
+  max-height: 60vh;
+  overflow-x: auto;
+}
+
+.lich-content table {
+  width: 100%;
+  min-width: 100%;
+}
+
+/* Ẩn phần calendar-container cũ */
+.card .calendar-container {
+  display: none;
+}
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header chính -->
+    <header class="main-header">
+      <h1>LỊCH SỬ DỤNG NHÀ SINH HOẠT</h1>
+      <p>Quản lý và theo dõi lịch sử dụng nhà sinh hoạt cộng đồng</p>
+    </header>  
+    
+    <div class="noi-quy-link">
+  <a href="noiquy.html">
+    <i class="fas fa-book"></i> Nội quy sử dụng nhà sinh hoạt
+  </a>
+</div>
+    
+    <!-- Lịch thu gọn -->
+    <div class="lich-wrapper">
+      <div class="lich-header" onclick="toggleCalendar()">
+        <div>
+          <i class="fas fa-calendar-alt"></i> LỊCH CHI TIẾT
+        </div>
+        <div>
+          <span id="dayCount">15 ngày tới</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+      
+      <div class="lich-content" id="calendarContent">
+        <!-- Chú thích màu -->
+        <div class="legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background: #e0e7ff; border-left: 4px solid #4361ee;"></div>
+            <span>Lịch thường xuyên (hàng tuần)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #fef3c7; border-left: 4px solid #f59e0b;"></div>
+            <span>Lịch hàng tháng</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #dcfce7; border-left: 4px solid #22c55e;"></div>
+            <span>Đã duyệt</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #fee2e2; border-left: 4px dashed #ef4444;"></div>
+            <span>Chờ duyệt</span>
+          </div>
+        </div>
+        
+        <!-- Thông báo mở rộng (sẽ hiển thị khi có) -->
+        <div id="expansionNotice" class="expansion-notice" style="display: none;">
+          <i class="fas fa-calendar-plus"></i>
+          <span id="expansionText"></span>
+        </div>
+        
+        <div class="calendar-container">
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr id="headerRow">
+                  <th class="sticky-col">Buổi</th>
+                </tr>
+              </thead>
+              <tbody id="calendarBody">
+                <tr data-buoi="Sáng"><td class="sticky-col">Sáng</td></tr>
+                <tr data-buoi="Chiều"><td class="sticky-col">Chiều</td></tr>
+                <tr data-buoi="Tối"><td class="sticky-col">Tối</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Nút đóng lịch -->
+        <button class="close-calendar-btn" onclick="toggleCalendar()">
+          <i class="fas fa-times"></i> Đóng Lịch
+        </button>
+      </div>
+    </div>
+    
+    <!-- Form đăng ký -->
+    <div class="card">
+      <h3><i class="fas fa-edit"></i> ĐĂNG KÝ MỚI</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="tenDonVi"><i class="fas fa-building"></i> Đơn vị đăng ký</label>
+          <input type="text" id="tenDonVi" placeholder="Ví dụ: Chi đoàn Thanh niên">
+        </div>
+        
+        <div class="form-group">
+          <label for="ngay"><i class="fas fa-calendar-day"></i> Ngày đăng ký</label>
+          <input type="date" id="ngay">
+        </div>
+        
+        <div class="form-group">
+          <label for="buoi"><i class="fas fa-clock"></i> Buổi</label>
+          <select id="buoi">
+            <option value="Sáng">Sáng (7h-12h)</option>
+            <option value="Chiều">Chiều (13h-17h)</option>
+            <option value="Tối">Tối (18h-22h)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="noiDung"><i class="fas fa-file-alt"></i> Nội dung họp/sử dụng</label>
+          <input type="text" id="noiDung" placeholder="Ví dụ: Họp chi đoàn tháng 10">
+        </div>
+        
+        <div class="form-group">
+          <button onclick="guiDangKy()">
+            <i class="fas fa-paper-plane"></i> Gửi Đăng Ký
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="noi-quy-footer">
+    <div class="bql-link" onclick="openBQL()">
+        BAN ĐIỀU HÀNH <br> NHÀ SINH HOẠT CỘNG ĐỒNG
+    </div>
+</div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygqnzIuAi7IqOwBGUFqrugrjGjFjvShIP-ZOxqQhUH4C2yryc0OIFA10d5Pd2177v1/exec';
+    const THU_TEN = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+     
+    let globalData = null;
+    let isFirstLoad = true; 
+
+
+    async function loadData() {
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getData`);
+
+    // kiểm tra lỗi server
+    if (!res.ok) {
+      throw new Error("Server error");
+    }
+
+    const data = await res.json();
+
+    console.log('=== DATA LOADED ===');
+    console.log('Lịch cố định:', data.lichCoDinh);
+    console.log('Lịch đã duyệt:', data.lichSu);
+    console.log('Đăng ký chờ duyệt:', data.dangKy);
+
+    globalData = data;
+    build15DayCalendar(data);
+    isFirstLoad = false;
+
+  } catch (e) {
+    console.error("Lỗi tải dữ liệu:", e);
+
+    // chỉ báo lỗi nếu không phải lần mở đầu
+    if (!navigator.onLine) {
+      showToast("Mất kết nối Internet");
+    } else if (!isFirstLoad) {
+      showToast("Không thể tải dữ liệu");
+    }
+  }
+}
+
+    function showToast(message) {
+  const toast = document.createElement("div");
+  toast.innerText = message;
+
+  toast.style.position = "fixed";
+  toast.style.bottom = "20px";
+  toast.style.left = "50%";
+  toast.style.transform = "translateX(-50%)";
+  toast.style.background = "#e74c3c";
+  toast.style.color = "white";
+  toast.style.padding = "10px 20px";
+  toast.style.borderRadius = "8px";
+  toast.style.zIndex = "9999";
+  toast.style.fontSize = "14px";
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
+}
+
+    function build15DayCalendar(data) {
+      const headerRow = document.getElementById('headerRow');
+      const rows = document.querySelectorAll('#calendarBody tr');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      // Xóa header cũ (giữ lại cột đầu tiên)
+      while (headerRow.children.length > 1) {
+        headerRow.removeChild(headerRow.lastChild);
+      }
+      
+      // Xóa các ô cũ trong các hàng (giữ lại cột đầu tiên)
+      rows.forEach(row => {
+        while (row.children.length > 1) {
+          row.removeChild(row.lastChild);
+        }
+      });
+
+      // ✅ TÌM NGÀY XA NHẤT TRONG CÁC ĐĂNG KÝ
+      let maxDays = 15; // Mặc định 15 ngày
+      let furthestDate = null;
+      
+      // Kiểm tra lịch cố định
+      if (data.lichCoDinh && data.lichCoDinh.length > 0) {
+        data.lichCoDinh.forEach(item => {
+          if (item['Ngày']) {
+            const ngayItem = new Date(item['Ngày'] + 'T00:00:00');
+            const diffTime = ngayItem - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (diffDays > maxDays) {
+              maxDays = diffDays;
+              furthestDate = item['Ngày'];
+            }
+          }
+        });
+      }
+      
+      // Kiểm tra lịch đã duyệt
+      if (data.lichSu && data.lichSu.length > 0) {
+        data.lichSu.forEach(item => {
+          if (item['Ngày']) {
+            const ngayItem = new Date(item['Ngày'] + 'T00:00:00');
+            const diffTime = ngayItem - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (diffDays > maxDays) {
+              maxDays = diffDays;
+              furthestDate = item['Ngày'];
+            }
+          }
+        });
+      }
+      
+      // Kiểm tra đăng ký chưa duyệt
+      if (data.dangKy && data.dangKy.length > 0) {
+        data.dangKy.forEach(item => {
+          if (item['Ngày']) {
+            const ngayItem = new Date(item['Ngày'] + 'T00:00:00');
+            const diffTime = ngayItem - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            if (diffDays > maxDays) {
+              maxDays = diffDays;
+              furthestDate = item['Ngày'];
+            }
+          }
+        });
+      }
+      
+      // Giới hạn tối đa 60 ngày để tránh quá tải
+      if (maxDays > 60) maxDays = 60;
+      
+      // ✅ Cập nhật text hiển thị số ngày
+      const dayCountEl = document.getElementById('dayCount');
+      const expansionNotice = document.getElementById('expansionNotice');
+      const expansionText = document.getElementById('expansionText');
+      
+      if (maxDays > 15) {
+        dayCountEl.innerHTML = `${maxDays} ngày`;
+        dayCountEl.classList.add('extended');
+        
+        // Hiển thị thông báo mở rộng
+        if (furthestDate) {
+          const formattedDate = new Date(furthestDate).toLocaleDateString('vi-VN');
+          expansionText.innerHTML = `Lịch đã tự động mở rộng đến ${maxDays} ngày, (do có đăng ký đến ${formattedDate}). Lướt qua lại để xem.`;
+          expansionNotice.style.display = 'flex';
+        }
+      } else {
+        dayCountEl.innerHTML = `${maxDays} ngày tới`;
+        dayCountEl.classList.remove('extended');
+        expansionNotice.style.display = 'none';
+      }
+
+      // 1. Tạo Header với số ngày động
+      for (let i = 0; i < maxDays; i++) {
+        let d = new Date();
+        d.setDate(today.getDate() + i);
+        
+        let thu = THU_TEN[d.getDay()];
+        let ngayThang = d.toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
+        let isoDate = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        let ngayTrongThang = d.getDate();
+
+        let th = document.createElement('th');
+        th.innerHTML = `<span class="date-label">${thu}</span><span class="day-label">${ngayThang}</span>`;
+        
+        if (d.getDay() === 0) {
+        th.classList.add('sunday');
+         }
+        
+        // Đánh dấu ngày hôm nay
+        if (i === 0) {
+          th.classList.add('today');
+        }
+        
+        headerRow.appendChild(th);
+
+        // 2. Điền dữ liệu vào 3 hàng (Sáng, Chiều, Tối)
+        rows.forEach(row => {
+          const buoi = row.getAttribute('data-buoi');
+          const cell = row.insertCell();
+          cell.className = 'cell-content';
+          
+          // Đánh dấu ô hôm nay
+          if (i === 0) {
+            cell.classList.add('today');
+          }
+          
+          let contentHtml = '';
+
+          // ✅ Kiểm tra lịch CỐ ĐỊNH (theo Ngày cụ thể)
+          const fixedList = (data.lichCoDinh || []).filter(x => {
+            if (!x['Ngày']) return false;
+            const xNgay = x['Ngày'].trim();
+            return xNgay === isoDate && x['Buổi'] === buoi;
+          });
+          fixedList.forEach(item => {
+            contentHtml += `<div class="event event-fixed"><b><i class="fas fa-calendar-check"></i> Cố định</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
+          });
+
+          // ✅ Kiểm tra lịch THƯỜNG XUYÊN (theo Thứ)
+          const weeklyList = (data.thuongXuyen || []).filter(x => 
+            x['Thứ'] === thu && x['Buổi'] === buoi
+          );
+          weeklyList.forEach(item => {
+            contentHtml += `<div class="event event-fixed"><b><i class="fas fa-redo"></i> Hàng tuần</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
+          });
+
+          // ✅ Kiểm tra lịch HÀNG THÁNG (theo Ngày trong tháng)
+          const monthlyList = (data.hangThang || []).filter(x => 
+            parseInt(x['Ngày']) === ngayTrongThang && x['Buổi'] === buoi
+          );
+          monthlyList.forEach(item => {
+            contentHtml += `<div class="event event-monthly"><b><i class="fas fa-calendar-week"></i> Hàng tháng (ngày ${item['Ngày']})</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
+          });
+
+          // ✅ Kiểm tra lịch ĐÃ DUYỆT (theo Ngày cụ thể)
+          const approvedList = (data.lichSu || []).filter(x => {
+            if (!x['Ngày']) return false;
+            const xNgay = x['Ngày'].trim();
+            return xNgay === isoDate && x['Buổi'] === buoi;
+          });
+          approvedList.forEach(item => {
+            contentHtml += `<div class="event event-approved"><b><i class="fas fa-check-circle"></i> ${item['Đơn vị'] || 'Không có đơn vị'}</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
+          });
+          
+          // ✅ Kiểm tra đăng ký CHƯA DUYỆT (theo Ngày cụ thể)
+          const pendingList = (data.dangKy || []).filter(x => {
+            if (!x['Ngày']) return false;
+            const xNgay = x['Ngày'].trim();
+            return xNgay === isoDate && x['Buổi'] === buoi;
+          });
+          pendingList.forEach(item => {
+            contentHtml += `<div class="event event-pending"><b><i class="fas fa-clock"></i> Chờ duyệt: ${item['Đơn vị'] || 'Không có đơn vị'}</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
+          });
+
+          cell.innerHTML = contentHtml || '<div class="empty"><i class="fas fa-calendar-times"></i> Trống</div>';
+        });
+      }
+    }
+
+    async function guiDangKy() {
+      const tenDonVi = document.getElementById('tenDonVi').value;
+      const ngayInput = document.getElementById('ngay').value;
+      const buoi = document.getElementById('buoi').value;
+      const noiDung = document.getElementById('noiDung').value;
+      
+      if(!tenDonVi || !ngayInput || !noiDung) {
+        alert("Vui lòng điền đầy đủ thông tin!");
+        return;
+      }
+      
+      const ngayChon = new Date(ngayInput + 'T00:00:00');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (ngayChon < today) {
+        alert("Không thể đăng ký ngày trong quá khứ!");
+        return;
+      }
+      
+      if(globalData) {
+        const isoDateChon = ngayInput;
+        const thuChon = THU_TEN[ngayChon.getDay()];
+        const ngayTrongThang = ngayChon.getDate();
+        
+        // ✅ Kiểm tra trùng với lịch CỐ ĐỊNH
+        const trungCoDinh = (globalData.lichCoDinh || []).some(x => {
+          return x['Ngày'] === isoDateChon && x['Buổi'] === buoi;
+        });
+        
+        if(trungCoDinh) {
+          alert("⚠️ Lịch trùng với lịch cố định! Vui lòng chọn ngày/buổi khác.");
+          return;
+        }
+        
+        // ✅ Kiểm tra trùng với lịch THƯỜNG XUYÊN
+        const trungThuongXuyen = (globalData.thuongXuyen || []).some(x => 
+          x['Thứ'] === thuChon && x['Buổi'] === buoi
+        );
+        
+        if(trungThuongXuyen) {
+          alert("⚠️ Lịch trùng với lịch thường xuyên (hàng tuần)! Vui lòng chọn ngày/buổi khác.");
+          return;
+        }
+        
+        // ✅ Kiểm tra trùng với lịch HÀNG THÁNG
+        const trungHangThang = (globalData.hangThang || []).some(x => 
+          parseInt(x['Ngày']) === ngayTrongThang && x['Buổi'] === buoi
+        );
+        
+        if(trungHangThang) {
+          alert("⚠️ Lịch trùng với lịch hàng tháng! Vui lòng chọn ngày/buổi khác.");
+          return;
+        }
+        
+        // ✅ Kiểm tra trùng với lịch ĐÃ DUYỆT
+        const trungDaDuyet = (globalData.lichSu || []).some(x => {
+          return x['Ngày'] === isoDateChon && x['Buổi'] === buoi;
+        });
+        
+        if(trungDaDuyet) {
+          alert("⚠️ Lịch trùng với lịch đã duyệt! Vui lòng chọn ngày/buổi khác.");
+          return;
+        }
+      }
+      
+      const payload = {
+        tenDonVi: tenDonVi,
+        ngay: ngayInput,
+        buoi: buoi,
+        noiDung: noiDung
+      };
+      
+      try {
+        const button = document.querySelector('button[onclick="guiDangKy()"]');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<span class="loading"></span> Đang gửi...';
+        button.disabled = true;
+        
+        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+        
+        button.innerHTML = originalText;
+        button.disabled = false;
+        
+        showCommitModal();
+        
+        document.getElementById('tenDonVi').value = '';
+        document.getElementById('ngay').value = '';
+        document.getElementById('noiDung').value = '';
+        
+        loadData();
+      } catch (error) {
+        console.error("Lỗi khi gửi đăng ký:", error);
+        alert("❌ Có lỗi xảy ra khi gửi đăng ký. Vui lòng thử lại.");
+        
+        const button = document.querySelector('button[onclick="guiDangKy()"]');
+        button.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Đăng Ký';
+        button.disabled = false;
+      }
+    }
+
+    // Đặt ngày mặc định là ngày mai
+    window.onload = function() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const formattedDate = tomorrow.toISOString().split('T')[0];
+      document.getElementById('ngay').value = formattedDate;
+      document.getElementById('ngay').min = formattedDate;
+      
+      loadData();
+      
+      setInterval(() => { if (navigator.onLine) { loadData(); } }, 30000);
+    };
+    
+    function showCommitModal() {
+  document.getElementById("commitModal").style.display = "flex";
+}
+
+function closeCommitModal() {
+  document.getElementById("commitModal").style.display = "none";
+}
+
+// Hàm toggle hiển thị lịch
+function toggleCalendar() {
+  const calendarContent = document.getElementById('calendarContent');
+  const lichHeader = document.querySelector('.lich-header');
+  
+  if (calendarContent.classList.contains('expanded')) {
+    calendarContent.classList.remove('expanded');
+    lichHeader.classList.remove('expanded');
+  } else {
+    calendarContent.classList.add('expanded');
+    lichHeader.classList.add('expanded');
+    // Cuộn đến phần lịch khi mở
+    calendarContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+  </script>
+  
+  <script>
+function openBQL(){
+  document.getElementById("bqlModal").style.display="flex";
+}
+
+function closeBQL(){
+  document.getElementById("bqlModal").style.display="none";
+}
+
+window.onclick = function(e){
+  const modal = document.getElementById("bqlModal");
+  if(e.target === modal){
+    modal.style.display="none";
+  }
+}
+</script>
+  
+  <!-- Popup cam kết -->
+<div id="commitModal" class="modal-overlay">
+  <div class="modal-box">
+    <i class="fas fa-check-circle modal-icon"></i>
+    <h3>ĐĂNG KÝ THÀNH CÔNG</h3>
+    <p>Tôi đã đọc nội quy và cam kết thực hiện!</p>
+    <button onclick="closeCommitModal()">Đồng ý</button>
+  </div>
+</div>
+
+   <!-- POPUP BAN QUẢN LÝ -->
+<div id="bqlModal" class="bql-modal">
+  <div class="bql-content">
+    <h3>DANH SÁCH BAN QUẢN LÝ</h3>
+
+    <ul>
+      <li><strong>Ông Phan Văn Anh</strong> – Trưởng ban – SĐT: .............</li>
+      <li><strong>Ông Nguyễn Thế Nghị</strong> – Phó ban – SĐT: .............</li>
+      <li><strong>Bà Nguyễn Thị Thu Hà</strong> – Thành viên – SĐT: .............</li>
+      <li><strong>Bà Ngô Thị Liễu</strong> – Thành viên – SĐT: .............</li>
+      <li><strong>Bà Lê Thị Hảo</strong> – Thành viên – SĐT: .............</li>
+    </ul>
+
+    <button onclick="closeBQL()" class="btn-close">Đóng</button>
+  </div>
+</div>
+ 
+
+</body>
+</html>
