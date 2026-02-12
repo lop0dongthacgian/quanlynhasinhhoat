@@ -80,8 +80,9 @@
     .sub-title { font-size: 1rem; margin: 20px 0 10px; color: var(--secondary); border-left: 2px solid var(--secondary); border-right: 2px solid var(--secondary); padding-left: 10px; text-align: left; }
 
     .btn-close-section { margin: 20px auto; display: block; padding: 8px 18px; background: transparent; border: 2px solid #dc2626; color: #dc2626; border-radius: 6px; cursor: pointer; }
-    
-    .loading { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s infinite; }
+    .btn-close-sub { margin: 20px auto; display: block; padding: 8px 18px; background: transparent; border: 2px solid var(--secondary); color: var(--secondary); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
+    .btn-close-sub:hover { background: var(--secondary); color: white; }
+     .loading { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -139,8 +140,14 @@
       </table>
     </div>
     
-    <!-- ✅ ĐÃ SỬA: Thêm mục 4 đúng cách, KHÔNG đặt trong script -->
-    <div class="sub-title">4. Lịch sử quá khứ (30-60 ngày)</div>
+    <!-- MỤC 4 THU GỌN RIÊNG -->
+<div class="sub-collapsible">
+  <div class="sub-title" onclick="toggleSubSection(this)" style="cursor:pointer;">
+    4. Lịch sử quá khứ (30-60 ngày)
+  </div>
+
+  <div class="sub-collapse-content" style="display:none;">
+
     <div class="table-container">
       <table id="tableLichSuQuaKhu">
         <thead>
@@ -155,8 +162,17 @@
         <tbody></tbody>
       </table>
     </div>
+
+    <!-- ✅ NÚT ĐÓNG RIÊNG -->
+    <button class="btn-close-sub"
+        onclick="closeSubSection(this)">
+  Đóng lịch sử quá khứ
+</button>
+
+  </div>
+</div>
     
-    <button class="btn-close-section" onclick="closeSection(this)">Đóng bảng quản lý lịch sử dụng</button>
+    <button class="btn-close-section" onclick="closeSection(this)">Đóng tất cả Quản lý lịch sử dụng</button>
   </div>
 </div>
 
@@ -403,6 +419,20 @@ async function loadData() {
 
     function toggleSection(header) { header.parentElement.classList.toggle("active"); }
     function closeSection(button) { button.closest(".collapsible").classList.remove("active"); }
+    
+    function toggleSubSection(header) {
+  const content = header.nextElementSibling;
+  content.style.display =
+    (content.style.display === "none" || content.style.display === "")
+      ? "block"
+      : "none";
+}
+
+function closeSubSection(button) {
+  const wrapper = button.closest(".sub-collapse-content");
+  if (wrapper) wrapper.style.display = "none";
+}
+    
 
     window.onload = loadData;
     setInterval(loadData, 30000);
