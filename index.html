@@ -374,13 +374,20 @@
     }
 
     .event-allday {
-      background: #fef9c3;
+      background: #ffffff;
       color: #713f12;
       border-left: 3px solid #ca8a04;
       border-right: 3px solid #ca8a04;
       font-weight: 700;
     }
-
+    
+    .pending-allday{
+  background:#fff7ed;
+  border-left:3px dashed #fb923c;
+  border-right:3px dashed #fb923c;
+  color:#9a3412;
+}
+    
     .empty {
       color: #adb5bd;
       font-size: 0.82rem;
@@ -1117,7 +1124,7 @@
                 <tr data-buoi="Sáng"><td class="sticky-col">Sáng</td></tr>
                 <tr data-buoi="Chiều"><td class="sticky-col">Chiều</td></tr>
                 <tr data-buoi="Tối"><td class="sticky-col">Tối</td></tr>
-                <tr data-buoi="Cả ngày"><td class="sticky-col" style="color:#b45309; font-size:0.82rem;">Cả<br>ngày</td></tr>
+                
               </tbody>
             </table>
           </div>
@@ -1449,10 +1456,34 @@
           const hasAllDayPending = (data.dangKy || []).some(x => x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày');
           const hasAllDay = hasAllDayFixed || hasAllDayWeekly || hasAllDayMonthly || hasAllDayApproved || hasAllDayPending;
 
-          // Nếu buổi lẻ (Sáng/Chiều/Tối) mà ngày đó đã có lịch "Cả ngày" → hiện thông báo bị chiếm
-          if (buoi !== 'Cả ngày' && hasAllDay) {
-            contentHtml += `<div class="event event-allday" style="font-size:0.78rem;font-weight:600;opacity:0.75;"><i class="fas fa-ban"></i> Bị chiếm bởi lịch cả ngày</div>`;
-          }
+          
+          // Nếu buổi lẻ mà có lịch "Cả ngày" → hiển thị giống nhau ở các buổi
+if (buoi !== 'Cả ngày' && hasAllDay) {
+
+  // ĐÃ DUYỆT
+  const allDayApproved = (data.lichSu || []).filter(x =>
+    x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày'
+  );
+
+  allDayApproved.forEach(item => {
+    contentHtml += `<div class="event event-allday">
+      <b><i class="fas fa-check-circle"></i> 🌟 Cả ngày – ${item['Đơn vị'] || ''}</b>
+      <br>${item['Nội dung'] || ''}
+    </div>`;
+  });
+
+  // CHỜ DUYỆT
+  const allDayPending = (data.dangKy || []).filter(x =>
+    x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày'
+  );
+
+  allDayPending.forEach(item => {
+    contentHtml += `<div class="event event-allday pending-allday">
+      <b><i class="fas fa-clock"></i> 🌟 Cả ngày (chờ duyệt): ${item['Đơn vị'] || ''}</b>
+      <br>${item['Nội dung'] || ''}
+    </div>`;
+  });
+}
 
           // ✅ Kiểm tra lịch CỐ ĐỊNH (so sánh DD/MM/YYYY)
           const fixedList = (data.lichCoDinh || []).filter(x => {
