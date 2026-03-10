@@ -7,435 +7,657 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary: #4361ee;
-      --primary-dark: #3a56d4;
-      --secondary: #7209b7;
-      --success: #06d6a0;
-      --danger: #ef476f;
-      --warning: #f59e0b;
-      --info: #3b82f6;
-      --light: #f8f9fa;
-      --dark: #343a40;
-      --gray: #6c757d;
-      --border: #e0e0e0;
-      --radius: 12px;
-      --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-      --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.05);
+      --primary: #4361ee; --primary-dark: #3a56d4; --secondary: #7209b7;
+      --success: #06d6a0; --danger: #ef476f; --warning: #f59e0b;
+      --gray: #6c757d; --border: #e0e0e0; --radius: 12px;
+      --shadow: 0 8px 30px rgba(0,0,0,0.08);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: linear-gradient(135deg,#f5f7fa 0%,#e4edf5 100%); font-family:'Segoe UI',sans-serif; color:#333; line-height:1.6; min-height:100vh; padding:20px; }
+    .container { max-width:1400px; margin:0 auto; }
 
-    body {
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #333; line-height: 1.6; min-height: 100vh; padding: 20px;
+    .card { background:white; padding:25px; border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:25px; border:1px solid rgba(255,255,255,0.5); }
+    .card-title { text-align:center; font-size:1.1rem; font-weight:700; margin-bottom:20px; color:var(--primary); display:flex; align-items:center; justify-content:center; gap:10px; padding-bottom:12px; border-bottom:2px solid #f0f0f0; cursor:pointer; }
+
+    .form-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; align-items:end; margin-bottom:20px; }
+    .form-group { display:flex; flex-direction:column; }
+    .form-group label { font-size:0.85rem; font-weight:600; margin-bottom:6px; color:var(--gray); }
+    input, select { padding:12px 15px; border:1px solid var(--border); border-radius:8px; width:100%; }
+
+    .btn { padding:12px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:8px; transition:0.3s; }
+    .btn-sm { padding:6px 12px; font-size:0.85rem; }
+    .btn-primary { background:var(--primary); color:white; }
+    .btn-success { background:var(--success); color:white; }
+    .btn-danger  { background:var(--danger);  color:white; }
+
+    .table-container { overflow-x:auto; border-radius:8px; border:1px solid var(--border); margin-top:15px; }
+    table { width:100%; border-collapse:collapse; min-width:800px; }
+    th, td { padding:14px 16px; text-align:center; border-bottom:1px solid #eee; }
+    th { background:#f8f9fa; font-weight:700; }
+
+    .status-pending  { color:var(--warning); background:rgba(245,158,11,0.1); padding:4px 10px; border-radius:20px; }
+    .status-approved { color:var(--success); background:rgba(6,214,160,0.1);  padding:4px 10px; border-radius:20px; }
+
+    tr.row-past td { color:#aaa; }
+    tr.row-past td .status-approved { color:#bbb; background:rgba(0,0,0,0.05); }
+    tr.row-today td { background:#fffbe6; font-weight:700; }
+    tr.divider-row td { background:#f0f0f0; font-size:0.82rem; font-weight:700; color:#888; padding:6px 16px; border-top:2px dashed #ccc; border-bottom:2px dashed #ccc; letter-spacing:1px; }
+
+    .collapse-content { display:none; margin-top:15px; }
+    .collapsible.active .collapse-content { display:block; }
+    .sub-title { font-size:1rem; margin:20px 0 10px; color:var(--secondary); border-left:2px solid var(--secondary); border-right:2px solid var(--secondary); padding-left:10px; text-align:left; }
+    .btn-close-section { margin:20px auto; display:block; padding:8px 18px; background:transparent; border:2px solid #dc2626; color:#dc2626; border-radius:6px; cursor:pointer; font-weight:600; }
+    .badge-count { font-size:0.75rem; background:var(--primary); color:white; border-radius:20px; padding:2px 8px; margin-left:8px; }
+    .section-note { font-size:0.82rem; color:var(--gray); text-align:center; margin-bottom:8px; font-style:italic; }
+
+    /* ===== MÀN HÌNH MẬT KHẨU ===== */
+    #passwordScreen {
+      position: fixed; inset: 0; background: linear-gradient(135deg,#f5f7fa 0%,#e4edf5 100%);
+      display: flex; align-items: center; justify-content: center; z-index: 99999;
     }
-
-    .container { max-width: 1400px; margin: 0 auto; }
-
-    .admin-header {
-      text-align: center; margin-bottom: 30px; padding: 25px 20px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      color: white; border-radius: var(--radius); shadow: var(--shadow);
-      position: relative; overflow: hidden;
+    #passwordScreen .pw-box {
+      background: white; padding: 40px 35px; border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15); text-align: center; width: 90%; max-width: 380px;
     }
+    #passwordScreen h2 { color: var(--primary); margin-bottom: 8px; font-size: 1.3rem; }
+    #passwordScreen p  { color: var(--gray); font-size: 0.9rem; margin-bottom: 22px; }
+    .pw-input-wrap { position: relative; margin-bottom: 16px; }
+    .pw-input-wrap input { width: 100%; padding-right: 44px; }
+    .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: var(--gray); font-size: 1rem; padding: 0; margin: 0; }
+    #passwordScreen .btn-login {
+      width: 100%; padding: 12px; background: var(--primary); color: white;
+      border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+    #passwordScreen .btn-login:hover { background: var(--primary-dark); }
+    #pwError { color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none; }
 
-    .admin-header h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; position: relative; text-shadow: 0.5px 0.5px 1.5px rgba(0, 0, 255, 0.9), 1px 1px 2px rgba(0, 0, 0, 0.9), 0.5px 0.5px 1px rgba(255, 255, 255, 0.6);}
-    .admin-header h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; position: relative; }
-    
-    .card {
-      background: white; padding: 25px; border-radius: var(--radius);
-      box-shadow: var(--shadow); margin-bottom: 25px; transition: 0.3s;
-      border: 1px solid rgba(255, 255, 255, 0.5);
+    /* ===== Ô TIN NHẮN ADMIN ===== */
+    .msg-section { margin-top: 18px; background: #f8f9ff; border: 1px solid #dce3ff; border-radius: 10px; padding: 16px; }
+    .msg-section label { font-size: 0.85rem; font-weight: 700; color: var(--primary); display: block; margin-bottom: 8px; }
+    .msg-section textarea {
+      width: 100%; min-height: 70px; padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: 8px; font-family: inherit; font-size: 0.9rem; resize: vertical; }
+    .msg-section .btn-msg { margin-top: 10px; }
+
+    /* Accordion danh sách tin nhắn */
+    .msg-list-wrap { margin-top: 16px; border: 1.5px solid #f59e0b; border-radius: 10px; overflow: hidden; }
+    .msg-list-header {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      padding: 10px 16px; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; user-select: none;
     }
-
-    .card-title {
-      text-align: center; font-size: 1.1rem; font-weight: 700; margin-bottom: 20px;
-      color: var(--primary); display: flex; align-items: center; justify-content: center;
-      gap: 10px; padding-bottom: 12px; border-bottom: 2px solid #f0f0f0; cursor: pointer;
+    .msg-list-header span { font-weight: 700; color: white; font-size: 0.88rem; letter-spacing: 0.4px; display:flex; align-items:center; gap:8px; }
+    .msg-list-header .msg-chevron { color: white; font-size: 0.85rem; transition: transform 0.3s; }
+    .msg-list-header.open .msg-chevron { transform: rotate(180deg); }
+    .msg-list-body { display: none; background: #fffdf5; max-height: 320px; overflow-y: auto; }
+    .msg-list-body.open { display: block; }
+    .msg-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 16px; border-bottom: 1px solid #fde68a;
     }
-
-    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end; margin-bottom: 20px; }
-    .form-group { display: flex; flex-direction: column; }
-    .form-group label { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--gray); }
-
-    input, select { padding: 12px 15px; border: 1px solid var(--border); border-radius: 8px; width: 100%; }
-
-    .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-success { background: var(--success); color: white; }
-    .btn-danger { background: var(--danger); color: white; }
-
-    .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; }
-    table { width: 100%; border-collapse: collapse; min-width: 800px; }
-    th, td { padding: 14px 16px; text-align: center; border-bottom: 1px solid #eee; }
-    th { background: #f8f9fa; font-weight: 700; }
-
-    .status-pending { color: var(--warning); background: rgba(245, 158, 11, 0.1); padding: 4px 10px; border-radius: 20px; }
-    .status-approved { color: var(--success); background: rgba(6, 214, 160, 0.1); padding: 4px 10px; border-radius: 20px; }
-
-    .collapse-content { display: none; margin-top: 15px; }
-    .collapsible.active .collapse-content { display: block; }
-    
-    .sub-title { font-size: 1rem; margin: 20px 0 10px; color: var(--secondary); border-left: 2px solid var(--secondary); border-right: 2px solid var(--secondary); padding-left: 10px; text-align: left; }
-
-    .btn-close-section { margin: 20px auto; display: block; padding: 8px 18px; background: transparent; border: 2px solid #dc2626; color: #dc2626; border-radius: 6px; cursor: pointer; }
-    .btn-close-sub { margin: 20px auto; display: block; padding: 8px 18px; background: transparent; border: 2px solid var(--secondary); color: var(--secondary); border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; }
-    .btn-close-sub:hover { background: var(--secondary); color: white; }
-     .loading { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .msg-item:last-child { border-bottom: none; }
+    .msg-item.is-active { background: #fffbeb; }
+    .msg-item-left { flex: 1; min-width: 0; }
+    .msg-item-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; font-weight: 700; padding: 2px 9px; border-radius: 20px; margin-bottom: 5px;
+      background: #06d6a0; color: white;
+    }
+    .msg-item-badge.old { background: #9ca3af; }
+    .msg-item-text { font-size: 0.9rem; color: #78350f; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+    .msg-item-time { font-size: 0.75rem; color: var(--gray); margin-top: 4px; font-style: italic; }
+    .btn-del-msg {
+      flex-shrink: 0; background: transparent; border: 1.5px solid var(--danger);
+      color: var(--danger); border-radius: 6px; padding: 5px 11px; font-size: 0.8rem;
+      font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s;
+      white-space: nowrap;
+    }
+    .btn-del-msg:hover { background: var(--danger); color: white; }
+    .msg-empty { padding: 18px; text-align: center; color: var(--gray); font-style: italic; font-size: 0.88rem; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="admin-header" style="border: 2px solid var(--primary); border-radius: var(--radius); background: rgba(255, 255, 255, 0.7); padding: 30px;">
-  <h1 style="color: white; margin: 0;">QUẢN LÝ LỊCH </h1>
-  <h2 style="color: var(--primary); margin: 0;"> SỬ DỤNG NHÀ <br> SINH HOẠT CỘNG ĐỒNG</h2>
-</header>
 
-    <div class="card">
-      <div class="card-title"><i class="fas fa-tasks"></i> DUYỆT ĐĂNG KÝ MỚI</div>
-      <div class="table-container">
-        <table id="tableDangKy">
-          <thead>
-            <tr>
-              <th>Ngày đăng ký</th>
-              <th>Ngày sử dụng</th>
-              <th>Buổi</th>
-              <th>Đơn vị</th>
-              <th>Nội dung</th>
-              <th>Hành động</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+<!-- ===== MÀN HÌNH NHẬP MẬT KHẨU ADMIN ===== -->
+<div id="passwordScreen">
+  <div class="pw-box">
+    <div style="font-size:3rem; margin-bottom:12px;">🔐</div>
+    <h2>TRANG QUẢN TRỊ</h2>
+    <p>Nhập mật khẩu để truy cập Ban Điều hành</p>
+    <div class="pw-input-wrap">
+      <input type="password" id="adminPwInput" placeholder="Nhập mật khẩu..." onkeydown="if(event.key==='Enter') checkAdminPw()">
+      <button class="pw-toggle" onclick="togglePw('adminPwInput','toggleAdminIcon')" title="Ẩn/Hiện mật khẩu">
+        <i class="fas fa-eye" id="toggleAdminIcon"></i>
+      </button>
     </div>
-
-    <div class="card collapsible">
-  <div class="card-title" onclick="toggleSection(this)"><i class="fas fa-calendar-check"></i> QUẢN LÝ LỊCH SỬ DỤNG (TẤT CẢ)</div>
-  <div class="collapse-content">
-    
-    <div class="sub-title">1. Lịch đã duyệt từ đăng ký</div>
-    <div class="table-container">
-      <table id="tableLichSu">
-        <thead><tr><th>Ngày</th><th>Buổi</th><th>Đơn vị</th><th>Nội dung</th><th>Xóa</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="sub-title">2. Lịch cố định hàng tuần</div>
-    <div class="table-container">
-      <table id="tableThuongXuyen">
-        <thead><tr><th>Thứ</th><th>Buổi</th><th>Nội dung</th><th>Xóa</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="sub-title">3. Lịch cố định hàng tháng</div>
-    <div class="table-container">
-      <table id="tableHangThang">
-        <thead><tr><th>Ngày</th><th>Thứ</th><th>Buổi</th><th>Nội dung</th><th>Xóa</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    
-    <!-- MỤC 4 THU GỌN RIÊNG -->
-<div class="sub-collapsible">
-  <div class="sub-title" onclick="toggleSubSection(this)" style="cursor:pointer;">
-    4. Lịch sử quá khứ (30-60 ngày)
+    <button class="btn-login" onclick="checkAdminPw()"><i class="fas fa-sign-in-alt"></i> Đăng nhập</button>
+    <div id="pwError">❌ Mật khẩu không đúng. Vui lòng thử lại.</div>
   </div>
+</div>
 
-  <div class="sub-collapse-content" style="display:none;">
+<div class="container" id="mainContent" style="display:none;">
 
+  <header style="text-align:center; margin-bottom:30px; border:2px solid var(--primary); border-radius:var(--radius); background:rgba(255,255,255,0.7); padding:30px;">
+    <h1 style="font-size:2rem; font-weight:800; color:white; margin:0; text-shadow:1px 1px 2px rgba(0,0,0,0.9);">QUẢN LÝ SỬ DỤNG</h1>
+    <h2 style="font-size:1.3rem; font-weight:800; color:var(--primary); margin:0;">NHÀ SINH HOẠT CỘNG ĐỒNG</h2>
+  </header>
+
+  <!-- DUYỆT ĐĂNG KÝ MỚI -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-tasks"></i> DUYỆT ĐĂNG KÝ MỚI</div>
+    <p class="section-note">Chỉ hiển thị đăng ký từ ngày hôm nay trở đi. Đăng ký đã qua ngày tự động bị xóa.</p>
     <div class="table-container">
-      <table id="tableLichSuQuaKhu">
+      <table id="tableDangKy">
         <thead>
           <tr>
-            <th>Ngày sử dụng</th>
-            <th>Buổi</th>
-            <th>Đơn vị</th>
-            <th>Nội dung</th>
-            <th>Thời gian đăng ký</th>
+            <th>Thời gian đăng ký</th><th>Ngày sử dụng</th><th>Buổi</th>
+            <th>Đơn vị</th><th>Nội dung</th><th>Hành động</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
 
-    <!-- ✅ NÚT ĐÓNG RIÊNG -->
-    <button class="btn-close-sub"
-        onclick="closeSubSection(this)">
-  Đóng lịch sử quá khứ
-</button>
+    <!-- Ô tin nhắn gửi người đăng ký -->
+    <div class="msg-section">
+      <label><i class="fas fa-comment-dots"></i> Tin nhắn gửi người đăng ký (thông báo chung hoặc lý do từ chối)</label>
+      <textarea id="adminMessage" placeholder="VD: Đơn vị vui lòng liên hệ Ban Điều hành để xác nhận thêm. / Đơn vị khác đã đăng ký trùng buổi, vui lòng chọn ngày khác..."></textarea>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm btn-msg" onclick="guiTinNhan()">
+          <i class="fas fa-paper-plane"></i> Gửi tin nhắn
+        </button>
+        <button class="btn btn-sm btn-msg" style="background:#e0e7ff;color:var(--primary);" onclick="document.getElementById('adminMessage').value=''">
+          <i class="fas fa-eraser"></i> Xóa nội dung ô soạn
+        </button>
+      </div>
 
-  </div>
-</div>
-    
-    <button class="btn-close-section" onclick="closeSection(this)">Đóng tất cả Quản lý lịch sử dụng</button>
-  </div>
-</div>
-
-    <div class="card collapsible">
-      <div class="card-title" onclick="toggleSection(this)"><i class="fas fa-redo"></i> THIẾT LẬP LỊCH CỐ ĐỊNH</div>
-      <div class="collapse-content">
-        <div class="sub-title">Thêm lịch hàng tuần</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Thứ</label>
-            <select id="thuTX">
-              <option value="Thứ 2">Thứ 2</option><option value="Thứ 3">Thứ 3</option>
-              <option value="Thứ 4">Thứ 4</option><option value="Thứ 5">Thứ 5</option>
-              <option value="Thứ 6">Thứ 6</option><option value="Thứ 7">Thứ 7</option>
-              <option value="Chủ Nhật">Chủ Nhật</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Buổi</label>
-            <select id="buoiTX">
-              <option value="Sáng">Sáng</option><option value="Chiều">Chiều</option><option value="Tối">Tối</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Nội dung</label>
-            <input type="text" id="noiDungTX" placeholder="VD: Sinh hoạt CLB">
-          </div>
-          <button class="btn btn-primary" onclick="themThuongXuyen()" style="justify-content: center; text-align: center; width: 100%;">Thêm vào lịch</button>
+      <!-- Accordion danh sách tất cả tin nhắn -->
+      <div class="msg-list-wrap" id="msgListWrap" style="display:none;">
+        <div class="msg-list-header" id="msgListHeader" onclick="toggleMsgList()">
+          <span><i class="fas fa-history"></i> <span id="msgListTitle">Danh sách tin nhắn</span></span>
+          <i class="fas fa-chevron-down msg-chevron"></i>
         </div>
-
-        <div class="sub-title">Thêm lịch hàng tháng (Cố định ngày)</div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Ngày trong tháng</label>
-            <input type="number" id="ngayHT" min="1" max="31" placeholder="1 - 31">
-          </div>
-          <div class="form-group">
-            <label>Buổi</label>
-            <select id="buoiHT">
-              <option value="Sáng">Sáng</option><option value="Chiều">Chiều</option><option value="Tối">Tối</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Nội dung</label>
-            <input type="text" id="noiDungHT" placeholder="VD: Họp tổ dân phố">
-          </div>
-          <button class="btn btn-primary" onclick="themHangThang()" style="justify-content: center; text-align: center; width: 100%;">Thêm vào lịch</button>
-          <button class="btn-close-section" onclick="closeSection(this)">Đóng bảng thiết lập lịch cố định</button> 
-        </div>
+        <div class="msg-list-body" id="msgListBody"></div>
       </div>
     </div>
-
-    <footer class="admin-footer" style="text-align: center; color: var(--gray); margin-top: 20px;">
-      <p>Nhà sinh hoạt cộng đồng Trung Bình A <br> Phường Thanh Khê - Thành phố Đà Nẵng</p>
-    </footer>
   </div>
 
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygqnzIuAi7IqOwBGUFqrugrjGjFjvShIP-ZOxqQhUH4C2yryc0OIFA10d5Pd2177v1/exec';
-    let globalData = {};
+  <!-- QUẢN LÝ LỊCH SỬ DỤNG -->
+  <div class="card collapsible">
+    <div class="card-title" onclick="toggleSection(this)">
+      <i class="fas fa-calendar-check"></i> QUẢN LÝ LỊCH SỬ DỤNG (TẤT CẢ)
+    </div>
+    <div class="collapse-content">
 
-    async function loadData() {
-      try {
-        const res = await fetch(`${SCRIPT_URL}?action=getData`);
-        globalData = await res.json();
-        renderDangKy(globalData.dangKy || []);
-        renderLichSu(globalData.lichSu || []);
-        renderThuongXuyen(globalData.thuongXuyen || []);
-        renderHangThang(globalData.hangThang || []);
-      } catch (e) { console.error("Lỗi:", e); }
+      <div class="sub-title">1. Lịch đã duyệt từ đăng ký <span id="badgeLichSu" class="badge-count">0</span></div>
+      <p class="section-note">Hiển thị toàn bộ. Ngày hiện tại &amp; tương lai xếp trên ↑ &nbsp;|&nbsp; Ngày đã qua xếp dưới ↓ (chữ xám)</p>
+      <div class="table-container">
+        <table id="tableLichSu">
+          <thead><tr><th>Ngày</th><th>Buổi</th><th>Đơn vị</th><th>Nội dung</th><th>Xóa</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="sub-title">2. Lịch cố định hàng tuần</div>
+      <div class="table-container">
+        <table id="tableThuongXuyen">
+          <thead><tr><th>Thứ</th><th>Buổi</th><th>Nội dung</th><th>Xóa</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="sub-title">3. Lịch cố định hàng tháng</div>
+      <div class="table-container">
+        <table id="tableHangThang">
+          <thead><tr><th>Ngày</th><th>Thứ</th><th>Buổi</th><th>Nội dung</th><th>Xóa</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <button class="btn-close-section" onclick="closeSection(this)">Đóng tất cả Quản lý lịch sử dụng</button>
+    </div>
+  </div>
+
+  <!-- THIẾT LẬP LỊCH CỐ ĐỊNH -->
+  <div class="card collapsible">
+    <div class="card-title" onclick="toggleSection(this)"><i class="fas fa-redo"></i> THIẾT LẬP LỊCH CỐ ĐỊNH</div>
+    <div class="collapse-content">
+      <div class="sub-title">Thêm lịch hàng tuần</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Thứ</label>
+          <select id="thuTX">
+            <option>Thứ 2</option><option>Thứ 3</option><option>Thứ 4</option>
+            <option>Thứ 5</option><option>Thứ 6</option><option>Thứ 7</option>
+            <option>Chủ Nhật</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Buổi</label>
+          <select id="buoiTX"><option>Sáng</option><option>Chiều</option><option>Tối</option><option>Cả ngày</option></select>
+        </div>
+        <div class="form-group">
+          <label>Nội dung</label>
+          <input type="text" id="noiDungTX" placeholder="VD: Sinh hoạt CLB">
+        </div>
+        <button class="btn btn-primary" onclick="themThuongXuyen()" style="justify-content:center;width:100%;">Thêm vào lịch</button>
+      </div>
+
+      <div class="sub-title">Thêm lịch hàng tháng (Cố định ngày)</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ngày trong tháng</label>
+          <input type="number" id="ngayHT" min="1" max="31" placeholder="1 - 31">
+        </div>
+        <div class="form-group">
+          <label>Buổi</label>
+          <select id="buoiHT"><option>Sáng</option><option>Chiều</option><option>Tối</option><option>Cả ngày</option></select>
+        </div>
+        <div class="form-group">
+          <label>Nội dung</label>
+          <input type="text" id="noiDungHT" placeholder="VD: Họp tổ dân phố">
+        </div>
+        <button class="btn btn-primary" onclick="themHangThang()" style="justify-content:center;width:100%;">Thêm vào lịch</button>
+        <button class="btn-close-section" onclick="closeSection(this)">Đóng bảng thiết lập lịch cố định</button>
+      </div>
+    </div>
+  </div>
+
+  <footer style="text-align:center; color:var(--gray); margin-top:20px;">
+    <p>Nhà sinh hoạt cộng đồng Trung Bình A <br> Phường Thanh Khê - Thành phố Đà Nẵng</p>
+    <button class="btn btn-sm" style="margin-top:12px;background:#e5e7eb;color:#374151;" onclick="debugData()">
+      <i class="fas fa-bug"></i> Debug dữ liệu server
+    </button>
+  </footer>
+</div>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzr49ISkqRKGcudIfWzXNqtzPadinc_eB8jQgJU243ryQBFqg5qsOzFFMWAMfaQMHc/exec';
+
+  // ===== MẬT KHẨU ADMIN (thay đổi tại đây) =====
+  const ADMIN_PASSWORD = 'admin2026';
+
+  function checkAdminPw() {
+    const input = document.getElementById('adminPwInput').value;
+    if (input === ADMIN_PASSWORD) {
+      document.getElementById('passwordScreen').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+      loadData();
+    } else {
+      document.getElementById('pwError').style.display = 'block';
+      document.getElementById('adminPwInput').value = '';
+      document.getElementById('adminPwInput').focus();
     }
+  }
 
-    // --- LOGIC KIỂM TRA TRÙNG LỊCH ---
-    function checkTrungLich(ngayStr, buoi) {
-      // 1. Chuyển ngày đăng ký sang Thứ
-      const parts = ngayStr.split('/');
-      const dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
-      const thuVN = ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"][dateObj.getDay()];
-      const ngayTrongThang = dateObj.getDate().toString();
-
-      // 2. Kiểm tra trùng lịch Thường Xuyên (Hàng tuần)
-      const trungTuan = globalData.thuongXuyen.find(l => l['Thứ'] === thuVN && l['Buổi'] === buoi);
-      if (trungTuan) return `Trùng lịch cố định: ${trungTuan['Nội dung']} (${thuVN})`;
-
-      // 3. Kiểm tra trùng lịch Hàng Tháng
-      const trungThang = globalData.hangThang.find(l => l['Ngày'].toString() === ngayTrongThang && l['Buổi'] === buoi);
-      if (trungThang) return `Trùng lịch tháng: ${trungThang['Nội dung']} (Ngày ${ngayTrongThang})`;
-
-      // 4. Kiểm tra trùng lịch đã duyệt
-      const trungDaDuyet = globalData.lichSu.find(l => l['Ngày'] === ngayStr && l['Buổi'] === buoi);
-      if (trungDaDuyet) return `Ngày này đã có đơn vị "${trungDaDuyet['Đơn vị']}" sử dụng.`;
-
-      return null;
+  function togglePw(inputId, iconId) {
+    const inp = document.getElementById(inputId);
+    const ico = document.getElementById(iconId);
+    if (inp.type === 'password') {
+      inp.type = 'text';
+      ico.className = 'fas fa-eye-slash';
+    } else {
+      inp.type = 'password';
+      ico.className = 'fas fa-eye';
     }
+  }
 
-    // --- RENDER & SẮP XẾP ---
-    function renderDangKy(arr) {
-      const tbody = document.querySelector('#tableDangKy tbody');
-      tbody.innerHTML = arr.map(item => `
-        <tr>
-          <td><small>${item['Thời gian đăng ký']}</small></td>
-          <td><strong>${item['Ngày']}</strong></td>
-          <td><span class="status-pending">${item['Buổi']}</span></td>
-          <td>${item['Đơn vị']}</td>
-          <td>${item['Nội dung']}</td>
-          <td>
-            <button class="btn btn-success btn-sm" onclick="duyetDangKy('${item.ID}', '${item['Ngày']}', '${item['Buổi']}')">Duyệt</button>
-            <button class="btn btn-danger btn-sm" onclick="xoaLich('dang_ky', '${item.ID}')">Xóa</button>
-          </td>
-        </tr>`).join('') || '<tr><td colspan="6">Không có yêu cầu mới</td></tr>';
-    }
+  // ===== GỬI TIN NHẮN =====
+  async function guiTinNhan() {
+    const msg = document.getElementById('adminMessage').value.trim();
+    if (!msg) return alert('Vui lòng nhập nội dung tin nhắn!');
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=luuTinNhan&msg=${encodeURIComponent(msg)}`);
+      const result = await res.json();
+      if (result.success) {
+        document.getElementById('adminMessage').value = '';
+        await loadData();
+      } else {
+        alert('❌ Lỗi: ' + (result.error || 'Không lưu được'));
+      }
+    } catch(e) { alert('❌ Lỗi kết nối: ' + e); }
+  }
 
-    function renderLichSu(arr) {
-     const tbody = document.querySelector('#tableLichSu tbody');
-     arr.sort((a, b) => new Date(a['Ngày'].split('/').reverse().join('-')) - new Date(b['Ngày'].split('/').reverse().join('-')));
-     tbody.innerHTML = arr.map(item => `
-         <tr>
-         <td>${item['Ngày']}</td>
+  // ===== XÓA TIN NHẮN THEO HÀNG =====
+  async function xoaTinNhanTheoHang(hang) {
+    if (!confirm('Xóa tin nhắn này?\nNếu đây là tin mới nhất, tin cũ hơn sẽ tự động hiển thị lại.')) return;
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=xoaTinNhanTheoHang&hang=${hang}`);
+      const result = await res.json();
+      if (result.success) {
+        await loadData();
+      } else {
+        alert('❌ Lỗi: ' + (result.error || 'Không xóa được'));
+      }
+    } catch(e) { alert('❌ Lỗi kết nối: ' + e); }
+  }
+
+  // ===== RENDER DANH SÁCH TIN NHẮN =====
+  function renderDanhSachTinNhan(list) {
+  const wrap  = document.getElementById('msgListWrap');
+  const body  = document.getElementById('msgListBody');
+  const title = document.getElementById('msgListTitle');
+
+  if (!list || list.length === 0) {
+    wrap.style.display = 'none';
+    return;
+  }
+
+  wrap.style.display = 'block';
+  title.textContent = `Danh sách tin nhắn (${list.length})`;
+
+  body.innerHTML = list.map((item) => {
+    return `<div class="msg-item is-active">
+      <div class="msg-item-left">
+        <div class="msg-item-badge">
+          <i class="fas fa-eye"></i> Đang hiển thị
+        </div>
+        <div class="msg-item-text">${escHtml(item.noiDung)}</div>
+        <div class="msg-item-time"><i class="fas fa-calendar"></i> ${(item.thoiGian || '').substring(0,10)}</div>
+      </div>
+      <button class="btn-del-msg" onclick="xoaTinNhanTheoHang(${item.hang})">
+        <i class="fas fa-trash-alt"></i> Xóa
+      </button>
+    </div>`;
+  }).join('');
+}
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function toggleMsgList() {
+    const header = document.getElementById('msgListHeader');
+    const body   = document.getElementById('msgListBody');
+    header.classList.toggle('open');
+    body.classList.toggle('open');
+  }
+
+  let globalData = {};
+
+  // =====================================================
+  // HELPER
+  // Server (Code.gs V3) trả ngày dạng "DD/MM/YYYY"
+  // =====================================================
+  function parseDate(str) {
+    if (!str) return null;
+    const p = str.trim().split('/');
+    if (p.length !== 3) return null;
+    // new Date(year, monthIndex, day)
+    return new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+  }
+
+  function getToday() {
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    return t;
+  }
+
+  // =====================================================
+  // LOAD DATA
+  // =====================================================
+  async function loadData() {
+    try {
+      const res = await fetch(`${SCRIPT_URL}?action=getData`);
+      globalData = await res.json();
+      renderDangKy(globalData.dangKy              || []);
+      renderLichSu(globalData.lichSu              || []);
+      renderThuongXuyen(globalData.thuongXuyen    || []);
+      renderHangThang(globalData.hangThang        || []);
+      renderDanhSachTinNhan(globalData.danhSachTinNhan || []);
+    } catch (e) { console.error('Lỗi tải dữ liệu:', e); }
+  }
+
+  // =====================================================
+  // KIỂM TRA TRÙNG LỊCH
+  // ngayStr = "DD/MM/YYYY" (từ server, khớp với data)
+  // "Cả ngày" xung đột với Sáng, Chiều, Tối và ngược lại
+  // =====================================================
+  function buoiConflict(a, b) {
+    if (a === b) return true;
+    if (a === 'Cả ngày' || b === 'Cả ngày') return true;
+    return false;
+  }
+
+  function checkTrungLich(ngayStr, buoi) {
+    const p       = ngayStr.split('/');
+    const dateObj = new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+    const thuVN   = ["Chủ Nhật","Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7"][dateObj.getDay()];
+    const ngayTrongThang = dateObj.getDate().toString();
+
+    const trungTuan = (globalData.thuongXuyen || []).find(l => l['Thứ'] === thuVN && buoiConflict(l['Buổi'], buoi));
+    if (trungTuan) return `Trùng lịch cố định: ${trungTuan['Nội dung']} (${thuVN})`;
+
+    const trungThang = (globalData.hangThang || []).find(l => l['Ngày'].toString() === ngayTrongThang && buoiConflict(l['Buổi'], buoi));
+    if (trungThang) return `Trùng lịch tháng: ${trungThang['Nội dung']} (Ngày ${ngayTrongThang})`;
+
+    // So sánh DD/MM/YYYY thẳng — cùng định dạng với server trả về
+    const trungDaDuyet = (globalData.lichSu || []).find(l => l['Ngày'] === ngayStr && buoiConflict(l['Buổi'], buoi));
+    if (trungDaDuyet) return `Ngày này đã có đơn vị "${trungDaDuyet['Đơn vị']}" sử dụng (${trungDaDuyet['Buổi']}).`;
+
+    return null;
+  }
+
+  // =====================================================
+  // RENDER: DUYỆT ĐĂNG KÝ
+  // Chỉ hiển thị ngày >= hôm nay, sắp xếp gần → xa
+  // =====================================================
+  function renderDangKy(arr) {
+    const tbody = document.querySelector('#tableDangKy tbody');
+    const today = getToday();
+
+    const filtered = arr
+      .filter(item => { const d = parseDate(item['Ngày']); return d && d >= today; })
+      .sort((a, b)  => parseDate(a['Ngày']) - parseDate(b['Ngày']));
+
+    tbody.innerHTML = filtered.map(item => `
+      <tr>
+        <td><small>${item['Thời gian đăng ký']}</small></td>
+        <td><strong>${item['Ngày']}</strong></td>
+        <td><span class="status-pending">${item['Buổi']}</span></td>
+        <td>${item['Đơn vị']}</td>
+        <td>${item['Nội dung']}</td>
+        <td>
+          <button class="btn btn-success btn-sm"
+            onclick="duyetDangKy('${item.ID}','${item['Ngày']}','${item['Buổi']}')">
+            <i class="fas fa-check"></i> Duyệt
+          </button>
+          <button class="btn btn-danger btn-sm"
+            onclick="xoaLich('dang_ky','${item.ID}')">
+            <i class="fas fa-trash"></i> Xóa
+          </button>
+        </td>
+      </tr>`).join('') ||
+      '<tr><td colspan="6" style="color:#aaa;font-style:italic;">Không có yêu cầu mới</td></tr>';
+  }
+
+  // =====================================================
+  // RENDER: LỊCH ĐÃ DUYỆT
+  //   Nhóm trên : hôm nay + tương lai
+  //               → ngày tăng dần; cùng ngày: Sáng→Chiều→Tối
+  //   Nhóm dưới : đã qua (trong 60 ngày)
+  //               → ngày giảm dần; cùng ngày: Sáng→Chiều→Tối; chữ xám
+  // =====================================================
+  function renderLichSu(arr) {
+    const tbody      = document.querySelector('#tableLichSu tbody');
+    const today      = getToday();
+    const BUOI_ORD   = { 'Sáng': 1, 'Chiều': 2, 'Tối': 3, 'Cả ngày': 0 };
+    const cmpBuoi    = (a, b) => (BUOI_ORD[a['Buổi']] || 9) - (BUOI_ORD[b['Buổi']] || 9);
+
+    // --- Tương lai + hôm nay: ngày tăng dần, cùng ngày theo buổi ---
+    const future = arr
+      .filter(item => { const d = parseDate(item['Ngày']); return d && d >= today; })
+      .sort((a, b) => {
+        const diff = parseDate(a['Ngày']) - parseDate(b['Ngày']);
+        return diff !== 0 ? diff : cmpBuoi(a, b);
+      });
+
+    // --- Đã qua: chỉ 60 ngày gần nhất; ngày giảm dần, cùng ngày theo buổi ---
+    const cutoff = new Date(today);
+    cutoff.setDate(cutoff.getDate() - 60);
+    const past = arr
+      .filter(item => { const d = parseDate(item['Ngày']); return d && d < today && d >= cutoff; })
+      .sort((a, b) => {
+        const diff = parseDate(b['Ngày']) - parseDate(a['Ngày']);
+        return diff !== 0 ? diff : cmpBuoi(a, b);
+      });
+
+    const badge = document.getElementById('badgeLichSu');
+    if (badge) badge.textContent = arr.length;
+
+    const rowHtml = (item, isPast) => {
+      const d       = parseDate(item['Ngày']);
+      const isToday = d && d.getTime() === today.getTime();
+      const cls     = isPast ? 'row-past' : (isToday ? 'row-today' : '');
+      return `<tr class="${cls}">
+        <td>${isToday ? '<strong>📌 ' + item['Ngày'] + '</strong>' : item['Ngày']}</td>
         <td><span class="status-approved">${item['Buổi']}</span></td>
         <td>${item['Đơn vị']}</td>
         <td>${item['Nội dung']}</td>
-        <td><button class="btn btn-danger btn-sm" onclick="xoaLich('lich_su', '${item.ID}')"><i class="fas fa-trash"></i></button></td>
-       </tr>`).join('') || '<tr><td colspan="5">Trống</td></tr>';
-       }
+        <td>
+          <button class="btn btn-danger btn-sm" onclick="xoaLich('lich_su','${item.ID}')">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>`;
+    };
 
-    function renderThuongXuyen(arr) {
-      const order = { "Thứ 2": 1, "Thứ 3": 2, "Thứ 4": 3, "Thứ 5": 4, "Thứ 6": 5, "Thứ 7": 6, "Chủ Nhật": 7 };
-      arr.sort((a, b) => order[a['Thứ']] - order[b['Thứ']]);
-      document.querySelector('#tableThuongXuyen tbody').innerHTML = arr.map(item => `
-        <tr>
-          <td><strong>${item['Thứ']}</strong></td>
-          <td>${item['Buổi']}</td>
-          <td>${item['Nội dung']}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="xoaLich('thuong_xuyen', '${item.ID}')">Xóa</button></td>
-        </tr>`).join('') || '<tr><td colspan="4">Trống</td></tr>';
+    let html = future.map(item => rowHtml(item, false)).join('');
+
+    if (past.length > 0) {
+      html += `<tr class="divider-row">
+        <td colspan="5">▲ HIỆN TẠI &amp; SẮP TỚI &nbsp;|&nbsp; ĐÃ QUA ▼</td>
+      </tr>`;
+      html += past.map(item => rowHtml(item, true)).join('');
     }
 
-    function renderHangThang(arr) {
-      arr.sort((a, b) => parseInt(a['Ngày']) - parseInt(b['Ngày']));
-      document.querySelector('#tableHangThang tbody').innerHTML = arr.map(item => `
-        <tr>
-          <td>Ngày ${item['Ngày']}</td>
-          <td>${item['Thứ'] || 'Cố định'}</td>
-          <td>${item['Buổi']}</td>
-          <td>${item['Nội dung']}</td>
-          <td><button class="btn btn-danger btn-sm" onclick="xoaLich('hang_thang', '${item.ID}')">Xóa</button></td>
-        </tr>`).join('') || '<tr><td colspan="5">Trống</td></tr>';
-    }
+    tbody.innerHTML = html ||
+      '<tr><td colspan="5" style="color:#aaa;font-style:italic;">Chưa có lịch nào được duyệt</td></tr>';
+  }
 
-    // --- HÀNH ĐỘNG ---
-    async function duyetDangKy(id, ngay, buoi) {
-      const error = checkTrungLich(ngay, buoi);
-      if (error) {
-        alert("⚠️ KHÔNG THỂ DUYỆT:\n" + error);
-        return;
-      }
-      if (!confirm('Duyệt yêu cầu này?')) return;
-      
-      const res = await fetch(`${SCRIPT_URL}?action=duyetDangKy&id=${id}`);
+  // =====================================================
+  // RENDER: LỊCH CỐ ĐỊNH
+  // =====================================================
+  function renderThuongXuyen(arr) {
+    const order = {"Thứ 2":1,"Thứ 3":2,"Thứ 4":3,"Thứ 5":4,"Thứ 6":5,"Thứ 7":6,"Chủ Nhật":7};
+    arr.sort((a, b) => order[a['Thứ']] - order[b['Thứ']]);
+    document.querySelector('#tableThuongXuyen tbody').innerHTML =
+      arr.map(item => `<tr>
+        <td><strong>${item['Thứ']}</strong></td>
+        <td>${item['Buổi']}</td>
+        <td>${item['Nội dung']}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="xoaLich('thuong_xuyen','${item.ID}')">Xóa</button></td>
+      </tr>`).join('') || '<tr><td colspan="4" style="color:#aaa;font-style:italic;">Trống</td></tr>';
+  }
+
+  function renderHangThang(arr) {
+    arr.sort((a, b) => parseInt(a['Ngày']) - parseInt(b['Ngày']));
+    document.querySelector('#tableHangThang tbody').innerHTML =
+      arr.map(item => `<tr>
+        <td>Ngày ${item['Ngày']}</td>
+        <td>${item['Thứ'] || 'Cố định'}</td>
+        <td>${item['Buổi']}</td>
+        <td>${item['Nội dung']}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="xoaLich('hang_thang','${item.ID}')">Xóa</button></td>
+      </tr>`).join('') || '<tr><td colspan="5" style="color:#aaa;font-style:italic;">Trống</td></tr>';
+  }
+
+  // =====================================================
+  // HÀNH ĐỘNG
+  // =====================================================
+  async function duyetDangKy(id, ngay, buoi) {
+    // ngay = "DD/MM/YYYY" — đúng định dạng để checkTrungLich và so sánh
+    const error = checkTrungLich(ngay, buoi);
+    if (error) { alert('⚠️ KHÔNG THỂ DUYỆT:\n' + error); return; }
+    if (!confirm(`Duyệt lịch ngày ${ngay} - ${buoi}?`)) return;
+    try {
+      const res    = await fetch(`${SCRIPT_URL}?action=duyetDangKy&id=${id}`);
       const result = await res.json();
-      if (result.success) { alert('Thành công!'); loadData(); }
-    }
+      if (result.success) { alert('✅ Đã duyệt thành công!'); loadData(); }
+      else alert('❌ Lỗi: ' + (result.error || 'Không rõ'));
+    } catch (e) { alert('❌ Lỗi kết nối: ' + e.toString()); }
+  }
 
-    async function xoaLich(sheet, id) {
-      if (!confirm('Xóa mục này?')) return;
-      const res = await fetch(`${SCRIPT_URL}?action=xoaLich&sheet=${sheet}&id=${id}`);
+  async function xoaLich(sheet, id) {
+    if (!confirm('Xóa mục này?')) return;
+    try {
+      const res    = await fetch(`${SCRIPT_URL}?action=xoaLich&sheet=${sheet}&id=${id}`);
       const result = await res.json();
       if (result.success) loadData();
+      else alert('❌ Lỗi: ' + (result.error || 'Không xóa được'));
+    } catch (e) { alert('❌ Lỗi kết nối: ' + e.toString()); }
+  }
+
+  async function themThuongXuyen() {
+    const thu  = document.getElementById('thuTX').value;
+    const buoi = document.getElementById('buoiTX').value;
+    const nd   = document.getElementById('noiDungTX').value.trim();
+    if (!nd) return alert('Nhập nội dung lịch hàng tuần');
+    try {
+      const url = `${SCRIPT_URL}?action=themThuongXuyen&thu=${encodeURIComponent(thu)}&buoi=${encodeURIComponent(buoi)}&nd=${encodeURIComponent(nd)}`;
+      const res = await fetch(url);
+      const r   = await res.json();
+      if (r.success) {
+        alert('✅ Đã thêm lịch hàng tuần!');
+        document.getElementById('noiDungTX').value = '';
+        await loadData();
+      } else {
+        alert('❌ Lỗi thêm lịch hàng tuần:\n' + (r.error || JSON.stringify(r)));
+      }
+    } catch(e) {
+      alert('❌ Lỗi kết nối khi thêm lịch hàng tuần:\n' + e.toString());
     }
+  }
 
-    async function themThuongXuyen() {
-      const thu = document.getElementById('thuTX').value;
-      const buoi = document.getElementById('buoiTX').value;
-      const nd = document.getElementById('noiDungTX').value;
-      if (!nd) return alert("Nhập nội dung");
-      const res = await fetch(`${SCRIPT_URL}?action=themThuongXuyen&thu=${encodeURIComponent(thu)}&buoi=${encodeURIComponent(buoi)}&nd=${encodeURIComponent(nd)}`);
-      const result = await res.json();
-      if (result.success) { loadData(); document.getElementById('noiDungTX').value = ''; }
+  async function themHangThang() {
+    const ngay = document.getElementById('ngayHT').value;
+    const buoi = document.getElementById('buoiHT').value;
+    const nd   = document.getElementById('noiDungHT').value.trim();
+    if (!ngay || !nd) return alert('Nhập đủ ngày trong tháng và nội dung');
+    if (parseInt(ngay) < 1 || parseInt(ngay) > 31) return alert('Ngày trong tháng phải từ 1 đến 31');
+    try {
+      const url = `${SCRIPT_URL}?action=themHangThang&ngay=${ngay}&buoi=${encodeURIComponent(buoi)}&nd=${encodeURIComponent(nd)}`;
+      const res = await fetch(url);
+      const r   = await res.json();
+      if (r.success) {
+        alert('✅ Đã thêm lịch hàng tháng!');
+        document.getElementById('ngayHT').value  = '';
+        document.getElementById('noiDungHT').value = '';
+        await loadData();
+      } else {
+        alert('❌ Lỗi thêm lịch hàng tháng:\n' + (r.error || JSON.stringify(r)));
+      }
+    } catch(e) {
+      alert('❌ Lỗi kết nối khi thêm lịch hàng tháng:\n' + e.toString());
     }
+  }
 
-    async function themHangThang() {
-      const ngay = document.getElementById('ngayHT').value;
-      const buoi = document.getElementById('buoiHT').value;
-      const nd = document.getElementById('noiDungHT').value;
-      if (!ngay || !nd) return alert("Nhập đủ ngày và nội dung");
-      const res = await fetch(`${SCRIPT_URL}?action=themHangThang&ngay=${ngay}&buoi=${encodeURIComponent(buoi)}&nd=${encodeURIComponent(nd)}`);
-      const result = await res.json();
-      if (result.success) { loadData(); document.getElementById('ngayHT').value = ''; document.getElementById('noiDungHT').value = ''; }
-    }
-    
-    // Thêm hàm này vào trong thẻ <script> của admin.html
-function renderLichSuQuaKhu(arr) {
-  const tbody = document.querySelector('#tableLichSuQuaKhu tbody');
-  if (!tbody) return;
-  
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  
-  // Lọc lịch đã qua
-  const oldSchedules = arr.filter(item => {
-    if (!item['Ngày']) return false;
-    const parts = item['Ngày'].split('/');
-    if (parts.length !== 3) return false;
-    const ngayItem = new Date(parts[2], parts[1]-1, parts[0]);
-    return ngayItem < today;
-  });
-  
-  // Sắp xếp từ mới nhất đến cũ nhất
-  oldSchedules.sort((a, b) => {
-    const aParts = a['Ngày'].split('/');
-    const bParts = b['Ngày'].split('/');
-    const aDate = new Date(aParts[2], aParts[1]-1, aParts[0]);
-    const bDate = new Date(bParts[2], bParts[1]-1, bParts[0]);
-    return bDate - aDate;
-  });
-  
-  // Chỉ lấy 60 ngày gần nhất
-  const last60Days = oldSchedules.slice(0, 60);
-  
-  tbody.innerHTML = last60Days.map(item => `
-    <tr>
-      <td><strong>${item['Ngày']}</strong></td>
-      <td>${item['Buổi']}</td>
-      <td>${item['Đơn vị']}</td>
-      <td>${item['Nội dung']}</td>
-      <td><small>${item['Thời gian đăng ký'] || ''}</small></td>
-    </tr>
-  `).join('') || '<tr><td colspan="5">Không có lịch sử quá khứ</td></tr>';
-}
+  function toggleSection(header) { header.parentElement.classList.toggle('active'); }
+  function closeSection(button)  { button.closest('.collapsible').classList.remove('active'); }
 
-// Cập nhật hàm loadData
-async function loadData() {
-  try {
-    const res = await fetch(`${SCRIPT_URL}?action=getData`);
-    globalData = await res.json();
-    renderDangKy(globalData.dangKy || []);
-    renderLichSu(globalData.lichSu || []);
-    renderLichSuQuaKhu(globalData.lichSu || []); // ✅ THÊM DÒNG NÀY
-    renderThuongXuyen(globalData.thuongXuyen || []);
-    renderHangThang(globalData.hangThang || []);
-  } catch (e) { console.error("Lỗi:", e); }
-}
-    
+  // ===== DEBUG: Xem dữ liệu thô từ server =====
+  async function debugData() {
+    try {
+      const res1 = await fetch(`${SCRIPT_URL}?action=getData`);
+      const d    = await res1.json();
+      const res2 = await fetch(`${SCRIPT_URL}?action=debug`);
+      const dbg  = await res2.json();
+      const info = [
+        '=== getData ===',
+        'dangKy (' + (d.dangKy||[]).length + '):', JSON.stringify(d.dangKy, null, 2),
+        'thuongXuyen (' + (d.thuongXuyen||[]).length + '):', JSON.stringify(d.thuongXuyen, null, 2),
+        'hangThang (' + (d.hangThang||[]).length + '):', JSON.stringify(d.hangThang, null, 2),
+        '=== debug raw dang_ky ===',
+        JSON.stringify(dbg, null, 2)
+      ].join('\n\n');
+      const win = window.open('', '_blank');
+      win.document.write('<pre style="font-size:12px;padding:20px;">' + info + '</pre>');
+    } catch(e) { alert('Lỗi debug: ' + e); }
+  }
 
-    function toggleSection(header) { header.parentElement.classList.toggle("active"); }
-    function closeSection(button) { button.closest(".collapsible").classList.remove("active"); }
-    
-    function toggleSubSection(header) {
-  const content = header.nextElementSibling;
-  content.style.display =
-    (content.style.display === "none" || content.style.display === "")
-      ? "block"
-      : "none";
-}
-
-function closeSubSection(button) {
-  const wrapper = button.closest(".sub-collapse-content");
-  if (wrapper) wrapper.style.display = "none";
-}
-    
-
-    window.onload = loadData;
-    setInterval(loadData, 30000);
-  </script>
+  // Tự động focus vào ô mật khẩu khi trang tải
+  window.onload = function() { document.getElementById('adminPwInput').focus(); };
+  setInterval(function(){ if(document.getElementById('mainContent').style.display!=='none') loadData(); }, 30000);
+</script>
 </body>
 </html>
