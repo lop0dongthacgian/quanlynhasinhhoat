@@ -1460,6 +1460,39 @@
           // Nếu buổi lẻ mà có lịch "Cả ngày" → hiển thị giống nhau ở các buổi
 if (buoi !== 'Cả ngày' && hasAllDay) {
 
+  // HÀNG THÁNG - Cả ngày
+  const allDayMonthly = (data.hangThang || []).filter(x =>
+    parseInt(x['Ngày']) === ngayTrongThang && x['Buổi'] === 'Cả ngày'
+  );
+  allDayMonthly.forEach(item => {
+    contentHtml += `<div class="event event-monthly">
+      <b><i class="fas fa-calendar-week"></i> 🌟 Cả ngày – Hàng tháng (ngày ${item['Ngày']})</b>
+      <br>${item['Nội dung'] || 'Không có nội dung'}
+    </div>`;
+  });
+
+  // THƯỜNG XUYÊN - Cả ngày
+  const allDayWeekly = (data.thuongXuyen || []).filter(x =>
+    x['Thứ'] === thu && x['Buổi'] === 'Cả ngày'
+  );
+  allDayWeekly.forEach(item => {
+    contentHtml += `<div class="event event-fixed">
+      <b><i class="fas fa-redo"></i> 🌟 Cả ngày – Hàng tuần</b>
+      <br>${item['Nội dung'] || 'Không có nội dung'}
+    </div>`;
+  });
+
+  // CỐ ĐỊNH - Cả ngày
+  const allDayFixed = (data.lichCoDinh || []).filter(x =>
+    x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày'
+  );
+  allDayFixed.forEach(item => {
+    contentHtml += `<div class="event event-fixed">
+      <b><i class="fas fa-calendar-check"></i> 🌟 Cả ngày – Cố định</b>
+      <br>${item['Nội dung'] || 'Không có nội dung'}
+    </div>`;
+  });
+
   // ĐÃ DUYỆT
   const allDayApproved = (data.lichSu || []).filter(x =>
     x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày'
