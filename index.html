@@ -49,10 +49,12 @@
       text-align: center;
       margin-bottom: 25px;
       padding: 20px 15px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background-color: transparent;
+      border-top: 2px solid;
+      border-bottom: 2px solid;
+      border-image: linear-gradient(to right, #0d2bbf, #66ccff, #0d2bbf) 1;
       color: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius: var(--radius);    
       position: relative;
       overflow: hidden;
     }
@@ -73,11 +75,14 @@
       margin-bottom: 8px;
       letter-spacing: 0.5px;
       position: relative;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      text-shadow:
+      0.5px 0.5px 1px rgba(0, 1, 255, 0.9),
+      1px 1px 2px rgba(0,0,0,0.9);
     }
 
     .main-header p {
       font-size: 1.1rem;
+      color: blue;
       opacity: 0.9;
       max-width: 800px;
       margin: 0 auto;
@@ -368,6 +373,14 @@
       border-right: 1px dashed #ef4444;
     }
 
+    .event-allday {
+      background: #fef9c3;
+      color: #713f12;
+      border-left: 3px solid #ca8a04;
+      border-right: 3px solid #ca8a04;
+      font-weight: 700;
+    }
+
     .empty {
       color: #adb5bd;
       font-size: 0.82rem;
@@ -577,7 +590,7 @@
 
     @media (max-width: 480px) {
       .main-header h1 {
-        font-size: 1.5rem; /* Nhỏ hơn cho điện thoại rất nhỏ */
+        font-size: 1.4rem; /* Nhỏ hơn cho điện thoại rất nhỏ */
       }
       
       .main-header p {
@@ -645,7 +658,118 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    /* ===== POPUP CAM KẾT ===== */
+    /* ===== POPUP XÁC NHẬN MẬT KHẨU SAU GỬI ĐĂNG KÝ ===== */
+#pwConfirmModal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  display: none; justify-content: center; align-items: center; z-index: 99999;
+}
+#pwConfirmModal .pw-box {
+  background: white; padding: 35px 30px; border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center; width: 90%; max-width: 380px;
+  animation: popupFade 0.3s ease;
+}
+#pwConfirmModal h3 { color: var(--primary); margin-bottom: 8px; font-size: 1.2rem; }
+#pwConfirmModal p  { color: var(--text-light); font-size: 0.9rem; margin-bottom: 18px; }
+.pw-input-wrap { position: relative; margin-bottom: 12px; }
+.pw-input-wrap input { width: 100%; padding-right: 44px; }
+.pw-toggle {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: var(--text-light);
+  font-size: 1rem; padding: 0; margin: 0; }
+#pwConfirmModal .btn-confirm {
+  width: 100%; padding: 11px; background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+#pwConfirmError { color: var(--danger); font-size: 0.85rem; margin-top: 8px; display: none; }
+
+/* ===== THÔNG BÁO TỪ ADMIN ===== */
+.admin-msg-box {
+  display: none;
+  margin: 0 0 18px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(245,158,11,0.15);
+}
+.admin-msg-header {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  padding: 10px 18px;
+  display: flex; align-items: center; gap: 9px;
+}
+.admin-msg-header span {
+  font-weight: 800; color: white; font-size: 0.9rem; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.admin-msg-header i { color: white; font-size: 1rem; }
+.admin-msg-body {
+  background: #fffbeb;
+  border: 1.5px solid #f59e0b;
+  border-top: none;
+  padding: 13px 18px;
+  color: #78350f;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-align: center;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Phân cách từng tin nhắn admin */
+.admin-msg-item {
+  padding: 10px 0;
+  border-bottom: 1.5px dashed #f59e0b;
+  text-align: left;
+}
+.admin-msg-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.admin-msg-num {
+  font-weight: 700;
+  color: #b45309;
+  font-size: 0.82rem;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+/* Thu gọn thông báo admin */
+.admin-msg-body{
+  display:none;
+}
+
+.admin-msg-box.expanded .admin-msg-body{
+  display:block;
+}
+
+.admin-arrow{
+  margin-left:auto;
+  transition:transform 0.3s ease;
+}
+
+.admin-msg-box.expanded .admin-arrow{
+  transform:rotate(180deg);
+}
+
+/* nút đóng */
+.admin-close-btn{
+  display:none;
+  margin:12px auto 15px;
+  padding:8px 22px;
+  background:transparent;
+  border:1.5px solid #f59e0b;
+  color:#92400e;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.admin-msg-box.expanded .admin-close-btn{
+  display:block;
+}
+
+.admin-close-btn:hover{
+  background:#f59e0b;
+  color:white;
+}
+
+/* ===== POPUP CAM KẾT ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -969,6 +1093,10 @@
             <div class="legend-color" style="background: #fee2e2; border-left: 4px dashed #ef4444;"></div>
             <span>Chờ duyệt</span>
           </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #fef9c3; border-left: 4px solid #ca8a04;"></div>
+            <span>Cả ngày (7h-22h)</span>
+          </div>
         </div>
         
         <!-- Thông báo mở rộng (sẽ hiển thị khi có) -->
@@ -989,6 +1117,7 @@
                 <tr data-buoi="Sáng"><td class="sticky-col">Sáng</td></tr>
                 <tr data-buoi="Chiều"><td class="sticky-col">Chiều</td></tr>
                 <tr data-buoi="Tối"><td class="sticky-col">Tối</td></tr>
+                <tr data-buoi="Cả ngày"><td class="sticky-col" style="color:#b45309; font-size:0.82rem;">Cả<br>ngày</td></tr>
               </tbody>
             </table>
           </div>
@@ -1004,6 +1133,20 @@
     <!-- Form đăng ký -->
     <div class="card">
       <h3><i class="fas fa-edit"></i> ĐĂNG KÝ MỚI</h3>
+
+      <!-- Thông báo từ Admin -->
+      <div class="admin-msg-box" id="adminMsgBox">
+        <div class="admin-msg-header" onclick="toggleAdminMsg()">
+          <i class="fas fa-bullhorn"></i>
+          <span>Thông báo từ Ban Điều hành</span>
+          <i class="fas fa-chevron-down admin-arrow"></i>
+        </div>
+        <div class="admin-msg-body" id="adminMsgContent"></div>
+        <button class="admin-close-btn" onclick="toggleAdminMsg()">
+          <i class="fas fa-times"></i> Đóng thông báo
+        </button>
+      </div>
+
       <div class="form-grid">
         <div class="form-group">
           <label for="tenDonVi"><i class="fas fa-building"></i> Đơn vị đăng ký</label>
@@ -1021,6 +1164,7 @@
             <option value="Sáng">Sáng (7h-12h)</option>
             <option value="Chiều">Chiều (13h-17h)</option>
             <option value="Tối">Tối (18h-22h)</option>
+            <option value="Cả ngày">Cả ngày (7h-22h)</option>
           </select>
         </div>
         
@@ -1045,8 +1189,70 @@
 </div>
 
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygqnzIuAi7IqOwBGUFqrugrjGjFjvShIP-ZOxqQhUH4C2yryc0OIFA10d5Pd2177v1/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzr49ISkqRKGcudIfWzXNqtzPadinc_eB8jQgJU243ryQBFqg5qsOzFFMWAMfaQMHc/exec';
     const THU_TEN = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+
+    // ===== MẬT KHẨU XÁC NHẬN GỬI ĐĂNG KÝ (thay đổi tại đây) =====
+    const INDEX_PASSWORD = 'nsh2026';
+
+    // Biến lưu dữ liệu form tạm thời trước khi xác nhận mật khẩu
+    let pendingPayload = null;
+
+    function togglePwIndex() {
+      const inp = document.getElementById('indexPwInput');
+      const ico = document.getElementById('toggleIndexIcon');
+      if (inp.type === 'password') { inp.type = 'text'; ico.className = 'fas fa-eye-slash'; }
+      else { inp.type = 'password'; ico.className = 'fas fa-eye'; }
+    }
+
+    function closePwConfirm() {
+      document.getElementById('pwConfirmModal').style.display = 'none';
+      document.getElementById('indexPwInput').value = '';
+      document.getElementById('pwConfirmError').style.display = 'none';
+      pendingPayload = null;
+      // Khôi phục nút gửi
+      const button = document.querySelector('button[onclick="guiDangKy()"]');
+      if (button) { button.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Đăng Ký'; button.disabled = false; }
+    }
+
+    async function checkIndexPw() {
+      const val = document.getElementById('indexPwInput').value;
+      if (val !== INDEX_PASSWORD) {
+        document.getElementById('pwConfirmError').style.display = 'block';
+        document.getElementById('indexPwInput').value = '';
+        return;
+      }
+      // Mật khẩu đúng → tiến hành gửi
+      document.getElementById('pwConfirmModal').style.display = 'none';
+      document.getElementById('indexPwInput').value = '';
+      document.getElementById('pwConfirmError').style.display = 'none';
+      await thucHienGuiDangKy();
+    }
+
+    async function thucHienGuiDangKy() {
+      if (!pendingPayload) return;
+      try {
+        const resp = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(pendingPayload) });
+        const button = document.querySelector('button[onclick="guiDangKy()"]');
+        if (button) { button.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Đăng Ký'; button.disabled = false; }
+        pendingPayload = null;
+        showCommitModal();
+        document.getElementById('tenDonVi').value = '';
+        document.getElementById('ngay').value = '';
+        document.getElementById('noiDung').value = '';
+        // Chờ 2.5s để Apps Script kịp ghi xong trước khi reload
+        setTimeout(() => loadData(), 2500);
+      } catch (error) {
+        console.error("Lỗi khi gửi đăng ký:", error);
+        alert("❌ Có lỗi xảy ra khi gửi đăng ký. Vui lòng thử lại.");
+        const button = document.querySelector('button[onclick="guiDangKy()"]');
+        if (button) { button.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi Đăng Ký'; button.disabled = false; }
+      }
+    }
+
+    function escHtmlIndex(str) {
+      return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
      
     let globalData = null;
     let isFirstLoad = true; 
@@ -1056,7 +1262,6 @@
   try {
     const res = await fetch(`${SCRIPT_URL}?action=getData`);
 
-    // kiểm tra lỗi server
     if (!res.ok) {
       throw new Error("Server error");
     }
@@ -1064,18 +1269,32 @@
     const data = await res.json();
 
     console.log('=== DATA LOADED ===');
-    console.log('Lịch cố định:', data.lichCoDinh);
-    console.log('Lịch đã duyệt:', data.lichSu);
-    console.log('Đăng ký chờ duyệt:', data.dangKy);
+    console.log('dangKy (' + (data.dangKy||[]).length + '):', JSON.stringify(data.dangKy));
+    console.log('lichSu (' + (data.lichSu||[]).length + '):', JSON.stringify(data.lichSu));
+    console.log('thuongXuyen (' + (data.thuongXuyen||[]).length + '):', JSON.stringify(data.thuongXuyen));
+    console.log('hangThang (' + (data.hangThang||[]).length + '):', JSON.stringify(data.hangThang));
 
     globalData = data;
     build15DayCalendar(data);
     isFirstLoad = false;
 
+    // Hiển thị tin nhắn từ admin nếu có - Bỏ phần hiển thị thời gian
+    const danhSach = data.danhSachTinNhan || [];
+    if (danhSach.length > 0) {
+      // Hiển thị nội dung với số thứ tự phân biệt từng tin
+      document.getElementById('adminMsgContent').innerHTML = danhSach.map((item, idx) =>
+        `<div class="admin-msg-item">
+          <div class="admin-msg-num">📌 Tin ${idx + 1}</div>
+          ${escHtmlIndex(item.noiDung)}
+        </div>`
+      ).join('');
+      document.getElementById('adminMsgBox').style.display = 'block';
+    } else {
+      document.getElementById('adminMsgBox').style.display = 'none';
+    }
+
   } catch (e) {
     console.error("Lỗi tải dữ liệu:", e);
-
-    // chỉ báo lỗi nếu không phải lần mở đầu
     if (!navigator.onLine) {
       showToast("Mất kết nối Internet");
     } else if (!isFirstLoad) {
@@ -1106,6 +1325,24 @@
   }, 4000);
 }
 
+    // ==========================================
+    // HELPER: Chuyển "DD/MM/YYYY" → Date object
+    // Server (Code.gs) trả ngày dạng DD/MM/YYYY
+    // ==========================================
+    function parseDDMMYYYY(str) {
+      if (!str) return null;
+      const p = str.trim().split('/');
+      if (p.length !== 3) return null;
+      return new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+    }
+
+    // Chuyển Date → "DD/MM/YYYY" để so sánh với dữ liệu server
+    function toDDMMYYYY(d) {
+      return String(d.getDate()).padStart(2,'0') + '/' +
+             String(d.getMonth()+1).padStart(2,'0') + '/' +
+             d.getFullYear();
+    }
+
     function build15DayCalendar(data) {
       const headerRow = document.getElementById('headerRow');
       const rows = document.querySelectorAll('#calendarBody tr');
@@ -1124,59 +1361,28 @@
         }
       });
 
-      // ✅ TÌM NGÀY XA NHẤT TRONG CÁC ĐĂNG KÝ
-      let maxDays = 15; // Mặc định 15 ngày
-      let furthestDate = null;
-      
-      // Kiểm tra lịch cố định
-      if (data.lichCoDinh && data.lichCoDinh.length > 0) {
-        data.lichCoDinh.forEach(item => {
-          if (item['Ngày']) {
-            const ngayItem = new Date(item['Ngày'] + 'T00:00:00');
-            const diffTime = ngayItem - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            
-            if (diffDays > maxDays) {
-              maxDays = diffDays;
-              furthestDate = item['Ngày'];
-            }
+      // ✅ TÌM NGÀY XA NHẤT TRONG CÁC ĐĂNG KÝ (ngày dạng DD/MM/YYYY)
+      let maxDays = 15;
+      let furthestDateStr = null;
+
+      function checkFurthest(items) {
+        (items || []).forEach(item => {
+          if (!item['Ngày']) return;
+          const ngayItem = parseDDMMYYYY(item['Ngày']);
+          if (!ngayItem) return;
+          const diffDays = Math.ceil((ngayItem - today) / (1000 * 60 * 60 * 24)) + 1;
+          if (diffDays > maxDays) {
+            maxDays = diffDays;
+            furthestDateStr = item['Ngày'];
           }
         });
       }
+
+      checkFurthest(data.lichCoDinh);
+      checkFurthest(data.lichSu);
+      checkFurthest(data.dangKy);
       
-      // Kiểm tra lịch đã duyệt
-      if (data.lichSu && data.lichSu.length > 0) {
-        data.lichSu.forEach(item => {
-          if (item['Ngày']) {
-            const ngayItem = new Date(item['Ngày'] + 'T00:00:00');
-            const diffTime = ngayItem - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            
-            if (diffDays > maxDays) {
-              maxDays = diffDays;
-              furthestDate = item['Ngày'];
-            }
-          }
-        });
-      }
-      
-      // Kiểm tra đăng ký chưa duyệt
-      if (data.dangKy && data.dangKy.length > 0) {
-        data.dangKy.forEach(item => {
-          if (item['Ngày']) {
-            const ngayItem = new Date(item['Ngày'] + 'T00:00:00');
-            const diffTime = ngayItem - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            
-            if (diffDays > maxDays) {
-              maxDays = diffDays;
-              furthestDate = item['Ngày'];
-            }
-          }
-        });
-      }
-      
-      // Giới hạn tối đa 60 ngày để tránh quá tải
+      // Giới hạn tối đa 60 ngày
       if (maxDays > 60) maxDays = 60;
       
       // ✅ Cập nhật text hiển thị số ngày
@@ -1187,11 +1393,8 @@
       if (maxDays > 15) {
         dayCountEl.innerHTML = `${maxDays} ngày`;
         dayCountEl.classList.add('extended');
-        
-        // Hiển thị thông báo mở rộng
-        if (furthestDate) {
-          const formattedDate = new Date(furthestDate).toLocaleDateString('vi-VN');
-          expansionText.innerHTML = `Lịch đã tự động mở rộng đến ${maxDays} ngày, (do có đăng ký đến ${formattedDate}). Lướt qua lại để xem.`;
+        if (furthestDateStr) {
+          expansionText.innerHTML = `Lịch đã tự động mở rộng đến ${maxDays} ngày (do có đăng ký đến ${furthestDateStr}). Lướt qua lại để xem.`;
           expansionNotice.style.display = 'flex';
         }
       } else {
@@ -1202,12 +1405,13 @@
 
       // 1. Tạo Header với số ngày động
       for (let i = 0; i < maxDays; i++) {
-        let d = new Date();
+        let d = new Date(today);
         d.setDate(today.getDate() + i);
         
         let thu = THU_TEN[d.getDay()];
         let ngayThang = d.toLocaleDateString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
-        let isoDate = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        // ✅ Dùng DD/MM/YYYY để so sánh với dữ liệu server
+        let ddmmyyyy = toDDMMYYYY(d);
         let ngayTrongThang = d.getDate();
 
         let th = document.createElement('th');
@@ -1224,7 +1428,7 @@
         
         headerRow.appendChild(th);
 
-        // 2. Điền dữ liệu vào 3 hàng (Sáng, Chiều, Tối)
+        // 2. Điền dữ liệu vào 4 hàng (Sáng, Chiều, Tối, Cả ngày)
         rows.forEach(row => {
           const buoi = row.getAttribute('data-buoi');
           const cell = row.insertCell();
@@ -1237,11 +1441,23 @@
           
           let contentHtml = '';
 
-          // ✅ Kiểm tra lịch CỐ ĐỊNH (theo Ngày cụ thể)
+          // Kiểm tra xem ngày này có lịch "Cả ngày" không (ảnh hưởng đến các buổi riêng)
+          const hasAllDayFixed = (data.lichCoDinh || []).some(x => x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày');
+          const hasAllDayWeekly = (data.thuongXuyen || []).some(x => x['Thứ'] === thu && x['Buổi'] === 'Cả ngày');
+          const hasAllDayMonthly = (data.hangThang || []).some(x => parseInt(x['Ngày']) === ngayTrongThang && x['Buổi'] === 'Cả ngày');
+          const hasAllDayApproved = (data.lichSu || []).some(x => x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày');
+          const hasAllDayPending = (data.dangKy || []).some(x => x['Ngày'] && x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === 'Cả ngày');
+          const hasAllDay = hasAllDayFixed || hasAllDayWeekly || hasAllDayMonthly || hasAllDayApproved || hasAllDayPending;
+
+          // Nếu buổi lẻ (Sáng/Chiều/Tối) mà ngày đó đã có lịch "Cả ngày" → hiện thông báo bị chiếm
+          if (buoi !== 'Cả ngày' && hasAllDay) {
+            contentHtml += `<div class="event event-allday" style="font-size:0.78rem;font-weight:600;opacity:0.75;"><i class="fas fa-ban"></i> Bị chiếm bởi lịch cả ngày</div>`;
+          }
+
+          // ✅ Kiểm tra lịch CỐ ĐỊNH (so sánh DD/MM/YYYY)
           const fixedList = (data.lichCoDinh || []).filter(x => {
             if (!x['Ngày']) return false;
-            const xNgay = x['Ngày'].trim();
-            return xNgay === isoDate && x['Buổi'] === buoi;
+            return x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === buoi;
           });
           fixedList.forEach(item => {
             contentHtml += `<div class="event event-fixed"><b><i class="fas fa-calendar-check"></i> Cố định</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
@@ -1263,24 +1479,24 @@
             contentHtml += `<div class="event event-monthly"><b><i class="fas fa-calendar-week"></i> Hàng tháng (ngày ${item['Ngày']})</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
           });
 
-          // ✅ Kiểm tra lịch ĐÃ DUYỆT (theo Ngày cụ thể)
+          // ✅ Kiểm tra lịch ĐÃ DUYỆT (so sánh DD/MM/YYYY)
           const approvedList = (data.lichSu || []).filter(x => {
             if (!x['Ngày']) return false;
-            const xNgay = x['Ngày'].trim();
-            return xNgay === isoDate && x['Buổi'] === buoi;
+            return x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === buoi;
           });
           approvedList.forEach(item => {
-            contentHtml += `<div class="event event-approved"><b><i class="fas fa-check-circle"></i> ${item['Đơn vị'] || 'Không có đơn vị'}</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
+            const cls = buoi === 'Cả ngày' ? 'event event-allday' : 'event event-approved';
+            contentHtml += `<div class="${cls}"><b><i class="fas fa-check-circle"></i> ${buoi === 'Cả ngày' ? '🌟 Cả ngày – ' : ''}${item['Đơn vị'] || 'Không có đơn vị'}</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
           });
           
-          // ✅ Kiểm tra đăng ký CHƯA DUYỆT (theo Ngày cụ thể)
+          // ✅ Kiểm tra đăng ký CHƯA DUYỆT (so sánh DD/MM/YYYY)
           const pendingList = (data.dangKy || []).filter(x => {
             if (!x['Ngày']) return false;
-            const xNgay = x['Ngày'].trim();
-            return xNgay === isoDate && x['Buổi'] === buoi;
+            return x['Ngày'].trim() === ddmmyyyy && x['Buổi'] === buoi;
           });
           pendingList.forEach(item => {
-            contentHtml += `<div class="event event-pending"><b><i class="fas fa-clock"></i> Chờ duyệt: ${item['Đơn vị'] || 'Không có đơn vị'}</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
+            const cls = buoi === 'Cả ngày' ? 'event event-allday' : 'event event-pending';
+            contentHtml += `<div class="${cls}" style="${buoi === 'Cả ngày' ? 'border-style:dashed;' : ''}"><b><i class="fas fa-clock"></i> ${buoi === 'Cả ngày' ? '🌟 Cả ngày (chờ duyệt): ' : 'Chờ duyệt: '}${item['Đơn vị'] || 'Không có đơn vị'}</b><br>${item['Nội dung'] || 'Không có nội dung'}</div>`;
           });
 
           cell.innerHTML = contentHtml || '<div class="empty"><i class="fas fa-calendar-times"></i> Trống</div>';
@@ -1308,16 +1524,29 @@
         return;
       }
       
+      // Kiểm tra trùng lịch với dữ liệu hiện tại
       if(globalData) {
-        const isoDateChon = ngayInput;
         const thuChon = THU_TEN[ngayChon.getDay()];
         const ngayTrongThang = ngayChon.getDate();
         
-        // ✅ Kiểm tra trùng với lịch CỐ ĐỊNH
-        const trungCoDinh = (globalData.lichCoDinh || []).some(x => {
-          return x['Ngày'] === isoDateChon && x['Buổi'] === buoi;
-        });
+        // ✅ Chuyển ngày chọn sang DD/MM/YYYY để so sánh với dữ liệu server
+        const ddmmyyyyChon = String(ngayChon.getDate()).padStart(2,'0') + '/' +
+                             String(ngayChon.getMonth()+1).padStart(2,'0') + '/' +
+                             ngayChon.getFullYear();
         
+        // Helper: kiểm tra xem 2 buổi có xung đột nhau không
+        // "Cả ngày" xung đột với Sáng, Chiều, Tối và ngược lại
+        function buoiConflict(a, b) {
+          if (a === b) return true;
+          const allDay = 'Cả ngày';
+          if (a === allDay || b === allDay) return true;
+          return false;
+        }
+
+        // ✅ Kiểm tra trùng với lịch CỐ ĐỊNH
+        const trungCoDinh = (globalData.lichCoDinh || []).some(x =>
+          x['Ngày'] === ddmmyyyyChon && buoiConflict(x['Buổi'], buoi)
+        );
         if(trungCoDinh) {
           alert("⚠️ Lịch trùng với lịch cố định! Vui lòng chọn ngày/buổi khác.");
           return;
@@ -1325,9 +1554,8 @@
         
         // ✅ Kiểm tra trùng với lịch THƯỜNG XUYÊN
         const trungThuongXuyen = (globalData.thuongXuyen || []).some(x => 
-          x['Thứ'] === thuChon && x['Buổi'] === buoi
+          x['Thứ'] === thuChon && buoiConflict(x['Buổi'], buoi)
         );
-        
         if(trungThuongXuyen) {
           alert("⚠️ Lịch trùng với lịch thường xuyên (hàng tuần)! Vui lòng chọn ngày/buổi khác.");
           return;
@@ -1335,21 +1563,28 @@
         
         // ✅ Kiểm tra trùng với lịch HÀNG THÁNG
         const trungHangThang = (globalData.hangThang || []).some(x => 
-          parseInt(x['Ngày']) === ngayTrongThang && x['Buổi'] === buoi
+          parseInt(x['Ngày']) === ngayTrongThang && buoiConflict(x['Buổi'], buoi)
         );
-        
         if(trungHangThang) {
           alert("⚠️ Lịch trùng với lịch hàng tháng! Vui lòng chọn ngày/buổi khác.");
           return;
         }
         
-        // ✅ Kiểm tra trùng với lịch ĐÃ DUYỆT
-        const trungDaDuyet = (globalData.lichSu || []).some(x => {
-          return x['Ngày'] === isoDateChon && x['Buổi'] === buoi;
-        });
-        
+        // ✅ Kiểm tra trùng với lịch ĐÃ DUYỆT (so sánh DD/MM/YYYY)
+        const trungDaDuyet = (globalData.lichSu || []).some(x =>
+          x['Ngày'] === ddmmyyyyChon && buoiConflict(x['Buổi'], buoi)
+        );
         if(trungDaDuyet) {
           alert("⚠️ Lịch trùng với lịch đã duyệt! Vui lòng chọn ngày/buổi khác.");
+          return;
+        }
+
+        // ✅ Kiểm tra trùng với đăng ký CHƯA DUYỆT (so sánh DD/MM/YYYY)
+        const trungChoDuyet = (globalData.dangKy || []).some(x =>
+          x['Ngày'] && x['Ngày'].trim() === ddmmyyyyChon && buoiConflict(x['Buổi'], buoi)
+        );
+        if(trungChoDuyet) {
+          alert("⚠️ Buổi này đã có đơn vị đăng ký đang chờ duyệt! Vui lòng chọn ngày/buổi khác hoặc liên hệ Ban Điều hành.");
           return;
         }
       }
@@ -1363,22 +1598,14 @@
       
       try {
         const button = document.querySelector('button[onclick="guiDangKy()"]');
-        const originalText = button.innerHTML;
-        button.innerHTML = '<span class="loading"></span> Đang gửi...';
+        button.innerHTML = '<span class="loading"></span> Đang xử lý...';
         button.disabled = true;
+
+        // Lưu payload tạm → hiện popup nhập mật khẩu
+        pendingPayload = payload;
+        document.getElementById('pwConfirmModal').style.display = 'flex';
+        setTimeout(() => document.getElementById('indexPwInput').focus(), 100);
         
-        await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-        
-        button.innerHTML = originalText;
-        button.disabled = false;
-        
-        showCommitModal();
-        
-        document.getElementById('tenDonVi').value = '';
-        document.getElementById('ngay').value = '';
-        document.getElementById('noiDung').value = '';
-        
-        loadData();
       } catch (error) {
         console.error("Lỗi khi gửi đăng ký:", error);
         alert("❌ Có lỗi xảy ra khi gửi đăng ký. Vui lòng thử lại.");
@@ -1442,8 +1669,30 @@ window.onclick = function(e){
     modal.style.display="none";
   }
 }
+function toggleAdminMsg(){
+  const box = document.getElementById("adminMsgBox");
+  box.classList.toggle("expanded");
+}
 </script>
   
+  <!-- Popup xác nhận mật khẩu sau gửi đăng ký -->
+<div id="pwConfirmModal">
+  <div class="pw-box">
+    <div style="font-size:2.5rem; margin-bottom:10px;">🔑</div>
+    <h3>XÁC NHẬN GỬI ĐĂNG KÝ</h3>
+    <p>Nhập mật khẩu để hoàn tất gửi đăng ký</p>
+    <div class="pw-input-wrap">
+      <input type="password" id="indexPwInput" placeholder="Nhập mật khẩu..." onkeydown="if(event.key==='Enter') checkIndexPw()">
+      <button class="pw-toggle" onclick="togglePwIndex()" title="Ẩn/Hiện">
+        <i class="fas fa-eye" id="toggleIndexIcon"></i>
+      </button>
+    </div>
+    <button class="btn-confirm" onclick="checkIndexPw()"><i class="fas fa-check"></i> Xác nhận</button>
+    <div id="pwConfirmError">❌ Mật khẩu không đúng!</div>
+    <button onclick="closePwConfirm()" style="margin-top:10px;background:transparent;border:1.5px solid #ccc;color:#666;padding:8px 20px;border-radius:8px;cursor:pointer;font-size:0.9rem;">Hủy</button>
+  </div>
+</div>
+
   <!-- Popup cam kết -->
 <div id="commitModal" class="modal-overlay">
   <div class="modal-box">
