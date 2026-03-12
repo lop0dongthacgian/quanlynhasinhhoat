@@ -526,7 +526,8 @@
 
     if (past.length > 0) {
       html += `<tr class="divider-row">
-        <td colspan="5">▲ HIỆN TẠI &amp; SẮP TỚI &nbsp;|&nbsp; ĐÃ QUA ▼</td>
+        <td colspan="5">
+  ▲↑ HIỆN TẠI &amp; SẮP TỚI &nbsp↑ <span style="border-left: 2px solid black; padding: 0 5px;">↓ &nbsp; ĐÃ QUA ↓▼</span></td>
       </tr>`;
       html += past.map(item => rowHtml(item, true)).join('');
     }
