@@ -1,0 +1,97 @@
+📋 HƯỚNG DẪN CÀI ĐẶT TRIGGER
+
+Bạn cần làm bước này để hàm tự động chạy:
+
+1. Mở Google Apps Script (script.google.com)
+2. Mở project của bạn
+3. Click vào "Triggers" (đồng hồ) ở thanh bên trái
+4. Click "+ Add Trigger" ở góc dưới phải
+5. Cấu hình:
+   · Function: autoCleanOldSchedules
+   · Event source: Time-driven
+   · Type: Day timer
+   · Time: 1am to 2am
+6. Click Save
+7. Cấp quyền khi được yêu cầu
+
+🎯 TÓM TẮT
+
+File Trạng thái Hành động
+Code.gs ✅ Đúng Không cần sửa, chỉ cần cài trigger
+admin.html ❌ Sai Cần sửa ngay - đặt HTML sai chỗ
+
+Sau khi sửa admin.html, hệ thống của bạn sẽ hoạt động hoàn hảo! 🚀
+
+
+# Hướng dẫn cài đặt hoàn chỉnh
+
+## Bước 1 — Tạo Google Sheet
+
+1. Vào [sheets.google.com](https://sheets.google.com) → tạo bảng tính mới
+2. Copy **ID** từ URL:
+   `https://docs.google.com/spreadsheets/d/`**`1ORKI6URp88X...`**`/edit`
+3. Dán ID vào dòng này trong code:
+   ```js
+   SPREADSHEET_ID: 'DÁN_ID_VÀO_ĐÂY'
+   ```
+
+---
+
+## Bước 2 — Tạo Google Apps Script
+
+1. Trong Google Sheet, vào **Extensions → Apps Script**
+2. Xóa toàn bộ code mặc định trong `Code.gs`
+3. Dán toàn bộ code `Code_LichSu.gs` vào
+4. Nhấn 💾 **Save**
+
+---
+
+## Bước 3 — Chạy hàm Setup (tạo các sheet)
+
+1. Ở thanh trên, chọn function **`setup`** trong dropdown
+2. Nhấn ▶️ **Run**
+3. Lần đầu sẽ hỏi quyền truy cập → nhấn **Review permissions → Allow**
+4. Kiểm tra Google Sheet — sẽ thấy 5 sheet được tạo tự động:
+   `dang_ky`, `lich_su`, `thuong_xuyen`, `hang_thang`, `lich_su_archive`
+
+---
+
+## Bước 4 — Deploy Web App (lấy URL)
+
+1. Nhấn **Deploy → New deployment**
+2. Nhấn ⚙️ → chọn **Web app**
+3. Điền như sau:
+   - Description: `v1` (tuỳ ý)
+   - Execute as: **Me**
+   - Who has access: **Anyone**
+4. Nhấn **Deploy** → Copy **URL** vừa tạo
+5. Dán URL vào file `admin.html` và `index.html` tại dòng:
+   ```js
+   const SCRIPT_URL = 'DÁN_URL_VÀO_ĐÂY';
+   ```
+
+---
+
+## Bước 5 — Cài Trigger tự động (quan trọng!)
+
+1. Trong Apps Script, nhấn ⏰ **Triggers** (biểu tượng đồng hồ bên trái)
+2. Nhấn **+ Add Trigger** (góc dưới phải)
+3. Cấu hình:
+   - Function: **`autoCleanOldSchedules`**
+   - Event source: **Time-driven**
+   - Type: **Day timer**
+   - Time: **1am to 2am**
+4. Nhấn **Save**
+
+---
+
+## Bước 6 — Kiểm tra hoạt động
+
+1. Quay lại Apps Script, chọn function **`testAutoClean`** → nhấn ▶️ **Run**
+2. Nhấn **Execution log** để xem kết quả — nếu thấy ✅ là thành công
+3. Mở `admin.html` trên trình duyệt để kiểm tra giao diện load dữ liệu
+
+---
+
+> ⚠️ **Lưu ý quan trọng:** Mỗi khi sửa code và muốn cập nhật, phải vào **Deploy → Manage deployments → Edit → New version → Deploy** thì thay đổi mới có hiệu lực. Nếu chỉ Save mà không Deploy lại thì web app vẫn chạy code cũ.
+
